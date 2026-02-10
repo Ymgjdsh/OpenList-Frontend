@@ -1572,31 +1572,16 @@
     />
     <title>Loading...</title>
     <script>
-      // OpenList 原生配置
       window.OPENLIST_CONFIG = {
         cdn: undefined,
         base_path: undefined,
-        api: "/api", // ← 关键修改！这里从 undefined 改为 '/api'
+        api: "https://api.ymg.qzz.io", // ← 改为 Worker 的地址
         main_color: undefined,
       }
       window.__dynamic_base__ = window.OPENLIST_CONFIG.cdn || ""
 
-      // 自定义全局配置
-      window.CUSTOM_CONFIG = {
-        apiBase: "/api",
-        version: "1.0.0",
-        debug: false,
-      }
-
-      // 设置全局变量供其他脚本使用
-      window.ALIST_API_BASE = "/api"
-
       // 调试信息
-      console.log("API 配置已加载:", {
-        api: window.OPENLIST_CONFIG.api,
-        customApi: window.ALIST_API_BASE,
-        location: window.location.origin,
-      })
+      console.log("使用 Cloudflare Worker API:", window.OPENLIST_CONFIG.api)
     </script>
   </head>
   <body>
