@@ -5,14 +5,5 @@
     "/api/public/*",
     "/@manage/*",
     "/dav/*"
-  ],
-  "exclude": [
-    "/*.js",
-    "/*.css",
-    "/*.html",
-    "/*.png",
-    "/*.jpg",
-    "/*.svg",
-    "/assets/*"
   ]
 }
