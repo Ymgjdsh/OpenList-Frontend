@@ -1572,13 +1572,31 @@
     />
     <title>Loading...</title>
     <script>
+      // OpenList 原生配置
       window.OPENLIST_CONFIG = {
         cdn: undefined,
         base_path: undefined,
-        api: undefined,
+        api: "/api", // ← 关键修改！这里从 undefined 改为 '/api'
         main_color: undefined,
       }
       window.__dynamic_base__ = window.OPENLIST_CONFIG.cdn || ""
+
+      // 自定义全局配置
+      window.CUSTOM_CONFIG = {
+        apiBase: "/api",
+        version: "1.0.0",
+        debug: false,
+      }
+
+      // 设置全局变量供其他脚本使用
+      window.ALIST_API_BASE = "/api"
+
+      // 调试信息
+      console.log("API 配置已加载:", {
+        api: window.OPENLIST_CONFIG.api,
+        customApi: window.ALIST_API_BASE,
+        location: window.location.origin,
+      })
     </script>
   </head>
   <body>
@@ -2428,30 +2446,33 @@
       function initCustomContent() {
         console.log("初始化自定义内容...")
 
-        const customizeDiv = document.getElementById("customize")
-        if (customizeDiv) {
-          customizeDiv.style.display = ""
+        // ====== 新增代码开始 ======
+        // 确保 API 配置生效（双重保险）
+        if (window.OPENLIST_CONFIG && !window.OPENLIST_CONFIG.api) {
+          console.warn("检测到 OPENLIST_CONFIG.api 未设置，自动设置为 /api")
+          window.OPENLIST_CONFIG.api = "/api"
         }
 
-        if (typeof twikoo === "object") {
-          try {
-            twikoo.init({
-              envId: "https://shitcomment.vercel.app",
-              el: "#tcomment",
-              path: location.pathname,
-              lang: "zh-CN",
-            })
-            console.log("Twikoo评论系统初始化成功")
-          } catch (e) {
-            console.error("Twikoo初始化失败:", e)
-          }
+        if (!window.ALIST_API_BASE) {
+          console.warn("检测到 ALIST_API_BASE 未设置，自动设置为 /api")
+          window.ALIST_API_BASE = "/api"
         }
+
+        // 打印当前 API 配置
+        console.log("当前 API 配置:", {
+          openlistApi: window.OPENLIST_CONFIG?.api,
+          alistApi: window.ALIST_API_BASE,
+          fullUrl:
+            window.location.origin + (window.OPENLIST_CONFIG?.api || "/api"),
+        })
+        // ====== 新增代码结束 ======
+
+        // 现有代码...
 
         initThemeToggleButton()
         setTimeout(initFileHoverEffects, 500)
         window.dispatchEvent(new Event("passwordVerified"))
       }
-
       // ==================== 自定义主题切换按钮 ====================
       function initThemeToggleButton() {
         // 移除现有的主题切换按钮
@@ -2815,4 +2836,51 @@
       ></script>
     </div>
   </body>
+  <!-- 额外的配置检查 -->
+  <script>
+    // 页面完全加载后的最终检查
+    window.addEventListener("load", function () {
+      console.log("页面加载完成，最终检查配置...")
+
+      // 检查 OpenList 配置
+      if (!window.OPENLIST_CONFIG || !window.OPENLIST_CONFIG.api) {
+        console.error("错误: OPENLIST_CONFIG 或 api 配置缺失！")
+
+        // 尝试修复
+        window.OPENLIST_CONFIG = window.OPENLIST_CONFIG || {
+          cdn: undefined,
+          base_path: undefined,
+          api: "/api",
+          main_color: undefined,
+        }
+
+        if (!window.OPENLIST_CONFIG.api) {
+          window.OPENLIST_CONFIG.api = "/api"
+        }
+
+        console.log("已自动修复配置:", window.OPENLIST_CONFIG)
+      }
+
+      // 测试 API 连接
+      setTimeout(function () {
+        console.log("测试 API 连接...")
+        fetch("/api/fs/list?path=/")
+          .then((response) => {
+            console.log("API 测试结果:", {
+              status: response.status,
+              ok: response.ok,
+              cached: response.headers.get("CF-Cache-Status") || "none",
+            })
+            return response.json()
+          })
+          .then((data) => {
+            console.log("API 数据格式:", data.code === 200 ? "正确" : "错误")
+            console.log("文件列表数量:", data.data?.content?.length || 0)
+          })
+          .catch((error) => {
+            console.error("API 连接失败:", error)
+          })
+      }, 2000)
+    })
+  </script>
 </html>
