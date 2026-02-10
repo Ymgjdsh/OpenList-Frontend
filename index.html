@@ -39,7 +39,8 @@
       href="https://npm.elemecdn.com/aplayer@1.10.1/dist/APlayer.min.css"
     />
     <script src="https://npm.elemecdn.com/aplayer@1.10.1/dist/APlayer.min.js"></script>
-    <!-- MetingJS 改为在密码验证后加载，这里先不加载 -->
+    <!-- 在密码验证后加载 MetingJS -->
+    <script src="https://cdn.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js"></script>
 
     <!-- 雨滴特效脚本 -->
     <script>
@@ -537,9 +538,13 @@
       /* 确保音乐播放器在左侧显示 */
       .aplayer {
         z-index: 999 !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+        background: rgba(255, 255, 255, 0.9) !important;
       }
 
-      /* 音乐播放器在左侧显示 */
+      /* 音乐播放器在左侧显示 - 修正列表显示逻辑 */
       .aplayer.aplayer-withlist {
         left: 0 !important;
         bottom: 20px !important;
@@ -551,16 +556,43 @@
         overflow-y: auto !important;
       }
 
-      /* 音乐播放器折叠状态 */
-      .aplayer.aplayer-withlist .aplayer-list {
-        display: block !important;
-      }
+      /* 音乐播放器折叠状态 - 让APlayer自己控制，不设置display */
 
       /* 确保播放器不覆盖其他内容 */
       @media (max-width: 768px) {
         .aplayer.aplayer-withlist {
           width: 280px !important;
         }
+      }
+
+      /* 确保列表按钮正常工作 */
+      .aplayer-list-btn {
+        cursor: pointer !important;
+        transition: transform 0.3s ease !important;
+      }
+
+      .aplayer-list-btn:hover {
+        transform: scale(1.1) !important;
+      }
+
+      /* 确保播放按钮可点击 */
+      .aplayer-play {
+        cursor: pointer !important;
+        transition: transform 0.3s ease !important;
+      }
+
+      .aplayer-play:hover {
+        transform: scale(1.1) !important;
+      }
+
+      /* 夜间模式适配 */
+      .hope-ui-dark .aplayer {
+        background: rgba(0, 0, 0, 0.7) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      }
+
+      .hope-ui-dark .aplayer.aplayer-withlist {
+        background: rgba(0, 0, 0, 0.8) !important;
       }
       /* ==================== 音乐播放器样式修复结束 ==================== */
 
@@ -1464,6 +1496,66 @@
         }
       }
 
+      /* 快速彩虹变色动画 - RPG机箱风扇效果 */
+      @keyframes rpgRgbEffect {
+        0% {
+          filter: hue-rotate(0deg) brightness(1.1);
+          box-shadow:
+            0 0 8px #ff0000,
+            0 0 16px #ff0000,
+            0 0 24px #ff0000,
+            inset 0 0 8px #ff0000;
+        }
+        16.66% {
+          filter: hue-rotate(60deg) brightness(1.2);
+          box-shadow:
+            0 0 8px #ffff00,
+            0 0 16px #ffff00,
+            0 0 24px #ffff00,
+            inset 0 0 8px #ffff00;
+        }
+        33.33% {
+          filter: hue-rotate(120deg) brightness(1.3);
+          box-shadow:
+            0 0 8px #00ff00,
+            0 0 16px #00ff00,
+            0 0 24px #00ff00,
+            inset 0 0 8px #00ff00;
+        }
+        50% {
+          filter: hue-rotate(180deg) brightness(1.2);
+          box-shadow:
+            0 0 8px #00ffff,
+            0 0 16px #00ffff,
+            0 0 24px #00ffff,
+            inset 0 0 8px #00ffff;
+        }
+        66.66% {
+          filter: hue-rotate(240deg) brightness(1.1);
+          box-shadow:
+            0 0 8px #0000ff,
+            0 0 16px #0000ff,
+            0 0 24px #0000ff,
+            inset 0 0 8px #0000ff;
+        }
+        83.33% {
+          filter: hue-rotate(300deg) brightness(1.2);
+          box-shadow:
+            0 0 8px #ff00ff,
+            0 0 16px #ff00ff,
+            0 0 24px #ff00ff,
+            inset 0 0 8px #ff00ff;
+        }
+        100% {
+          filter: hue-rotate(360deg) brightness(1.1);
+          box-shadow:
+            0 0 8px #ff0000,
+            0 0 16px #ff0000,
+            0 0 24px #ff0000,
+            inset 0 0 8px #ff0000;
+        }
+      }
+
       /* 悬停状态 - 初始突出显示 */
       .obj-box .item:hover,
       .item:hover {
@@ -1519,40 +1611,6 @@
         /* 保留原始效果 */
       }
       /* ==================== 隐藏测试方块样式结束 ==================== */
-      /* ==================== 音乐播放器修复样式 ==================== */
-      /* 确保列表按钮可点击 */
-      .aplayer-list-btn {
-        cursor: pointer !important;
-      }
-
-      /* 列表折叠时的按钮图标方向 */
-      .aplayer-list-btn .aplayer-icon {
-        transition: transform 0.3s ease !important;
-      }
-
-      .aplayer.aplayer-withlist .aplayer-list {
-        transition:
-          opacity 0.3s ease,
-          transform 0.3s ease !important;
-      }
-
-      /* 确保播放器在左侧显示且列表默认折叠 */
-      .aplayer.aplayer-withlist {
-        left: 0 !important;
-        bottom: 20px !important;
-        width: 300px !important;
-      }
-
-      .aplayer.aplayer-withlist .aplayer-list {
-        display: none !important; /* 默认隐藏 */
-        max-height: 400px !important;
-        overflow-y: auto !important;
-      }
-
-      /* 列表展开时的样式 */
-      .aplayer.aplayer-withlist.aplayer-list-mini .aplayer-list {
-        display: block !important;
-      }
     </style>
 
     <meta charset="utf-8" />
@@ -1722,7 +1780,7 @@
               initCustomContent()
               setTimeout(() => initClickEffect(), 100)
               setTimeout(() => initFloatingAd(), 500)
-              setTimeout(() => initMusicPlayer(), 800)
+              setTimeout(() => initMusicPlayer(), 1500) // 增加延迟
             }
           } catch (e) {
             console.log("验证数据解析失败，清除存储")
@@ -1882,7 +1940,7 @@
             initCustomContent()
             setTimeout(() => initClickEffect(), 100)
             setTimeout(() => initFloatingAd(), 500)
-            setTimeout(() => initMusicPlayer(), 800)
+            setTimeout(() => initMusicPlayer(), 1500) // 增加延迟
           }, 800)
         } else {
           console.log("密码验证失败")
@@ -2117,34 +2175,8 @@
         const selectedPlaylist =
           playlists[Math.floor(Math.random() * playlists.length)]
 
-        // 使用APlayer和MetingJS创建播放器
-        const loadMeting = () => {
-          if (window.Meting) {
-            createPlayer(selectedPlaylist)
-            return
-          }
-
-          const script = document.createElement("script")
-          script.src =
-            "https://cdn.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js"
-          script.onload = function () {
-            console.log("MetingJS 加载成功")
-            createPlayer(selectedPlaylist)
-          }
-
-          script.onerror = function () {
-            console.error("MetingJS 加载失败")
-            const container = document.getElementById("music-player-container")
-            if (container) {
-              container.innerHTML =
-                '<div style="text-align:center;color:#666;padding:20px;">音乐播放器加载失败</div>'
-            }
-          }
-
-          document.head.appendChild(script)
-        }
-
-        const createPlayer = (playlist) => {
+        // 创建播放器
+        const createPlayer = () => {
           playerContainer.innerHTML = `
       <meting-js
         fixed="true"
@@ -2156,113 +2188,162 @@
         volume="0.6"
         server="netease"
         type="playlist"
-        id="${playlist.id}">
+        id="${selectedPlaylist.id}">
       </meting-js>
       <div style="text-align:center;margin-top:5px;color:#888;font-size:12px;">
-        正在播放: ${playlist.name} 歌单 (随机播放)
+        正在播放: ${selectedPlaylist.name} 歌单 (随机播放)
       </div>
     `
 
-          console.log("音乐播放器已创建，使用歌单ID:", playlist.id)
+          console.log("音乐播放器已创建，使用歌单ID:", selectedPlaylist.id)
           musicPlayerInitialized = true
 
-          // 【修复】延迟强制折叠歌单列表
+          // 【修复】修复播放器列表功能
           setTimeout(() => {
-            forceFoldPlaylist()
+            fixPlaylistFunction()
           }, 1500)
 
           // 延迟自动播放
           setTimeout(() => {
             autoPlayMusic()
-          }, 1000)
+          }, 2000)
         }
 
-        loadMeting()
+        // 检查MetingJS是否已加载
+        if (typeof MetingJSElement !== "undefined") {
+          createPlayer()
+        } else {
+          // 如果未加载，等待加载
+          const checkMeting = setInterval(() => {
+            if (typeof MetingJSElement !== "undefined") {
+              clearInterval(checkMeting)
+              createPlayer()
+            }
+          }, 100)
+
+          // 10秒后超时
+          setTimeout(() => {
+            clearInterval(checkMeting)
+            if (typeof MetingJSElement === "undefined") {
+              playerContainer.innerHTML =
+                '<div style="text-align:center;color:#666;padding:20px;">音乐播放器加载失败，请刷新页面重试</div>'
+            }
+          }, 10000)
+        }
       }
 
-      // 【新增】强制折叠歌单列表函数
-      function forceFoldPlaylist() {
-        console.log("尝试强制折叠歌单列表...")
+      // 【修复】修复播放器列表功能
+      function fixPlaylistFunction() {
+        console.log("修复播放器列表功能...")
 
-        // 方法1：通过APlayer实例
-        if (window.aplayers && window.aplayers.length > 0) {
-          const player = window.aplayers[0]
-          if (player && typeof player.setListFolded === "function") {
-            player.setListFolded(true)
-            console.log("通过APlayer实例强制折叠成功")
-          }
-        }
+        let attempts = 0
+        const maxAttempts = 10
 
-        // 方法2：通过点击列表按钮
-        const listBtn = document.querySelector(".aplayer .aplayer-list-btn")
-        if (listBtn) {
-          // 先展开再折叠（确保状态切换）
-          const isFolded = listBtn.classList.contains("aplayer-list-mini")
-          if (!isFolded) {
-            listBtn.click()
-            console.log("通过点击列表按钮强制折叠成功")
-          }
-        }
+        const tryFix = () => {
+          attempts++
+          console.log(`修复列表功能尝试 ${attempts}/${maxAttempts}`)
 
-        // 方法3：直接修改DOM样式
-        const listElement = document.querySelector(".aplayer-list")
-        if (listElement) {
-          listElement.style.display = "none"
-          console.log("通过直接修改DOM样式折叠成功")
+          // 检查APlayer实例
+          if (window.aplayers && window.aplayers.length > 0) {
+            const player = window.aplayers[0]
 
-          // 确保列表按钮显示正确状态
-          const listBtnIcon = document.querySelector(
-            ".aplayer-list-btn .aplayer-icon",
-          )
-          if (listBtnIcon) {
-            listBtnIcon.style.transform = "rotate(90deg)"
-          }
-        }
+            // 方法1：使用APlayer API设置列表折叠状态
+            if (typeof player.setListFolded === "function") {
+              try {
+                player.setListFolded(true)
+                console.log("通过APlayer API设置列表折叠成功")
+              } catch (error) {
+                console.warn("APlayer API调用失败:", error)
+              }
+            }
 
-        // 方法4：监听列表点击事件，确保可以正常切换
-        setTimeout(() => {
-          const listBtn = document.querySelector(".aplayer .aplayer-list-btn")
-          if (listBtn && !listBtn.hasAttribute("data-fixed-click")) {
-            listBtn.setAttribute("data-fixed-click", "true")
-            listBtn.addEventListener("click", function () {
-              setTimeout(() => {
-                // 确保列表按钮图标状态正确
-                const listBtnIcon = document.querySelector(
-                  ".aplayer-list-btn .aplayer-icon",
-                )
-                const listElement = document.querySelector(".aplayer-list")
-                if (listElement && listBtnIcon) {
-                  const isListVisible =
-                    listElement.style.display !== "none" &&
-                    listElement.offsetHeight > 0
-                  if (isListVisible) {
-                    listBtnIcon.style.transform = "rotate(90deg)"
-                  } else {
-                    listBtnIcon.style.transform = "rotate(0deg)"
+            // 方法2：确保列表按钮正常工作
+            const listBtn = document.querySelector(".aplayer .aplayer-list-btn")
+            if (listBtn) {
+              // 移除之前可能添加的干扰事件
+              const newBtn = listBtn.cloneNode(true)
+              listBtn.parentNode.replaceChild(newBtn, listBtn)
+
+              // 为新的列表按钮添加正常点击事件
+              newBtn.addEventListener("click", function () {
+                console.log("列表按钮被点击")
+
+                // 等待APlayer处理完点击事件后，检查状态
+                setTimeout(() => {
+                  const listElement = document.querySelector(".aplayer-list")
+                  if (listElement) {
+                    console.log("列表元素存在，高度:", listElement.offsetHeight)
                   }
-                }
-              }, 10)
-            })
+                }, 100)
+              })
+
+              console.log("列表按钮已修复")
+            }
+
+            // 方法3：移除可能存在的错误样式
+            const listElement = document.querySelector(".aplayer-list")
+            if (listElement) {
+              // 移除所有可能阻止显示的样式
+              listElement.style.display = ""
+              listElement.style.opacity = ""
+              listElement.style.visibility = ""
+              listElement.style.height = ""
+              listElement.style.maxHeight = ""
+
+              console.log("列表元素样式已重置")
+            }
+
+            return true // 修复成功
           }
-        }, 100)
+
+          // 继续尝试或停止
+          if (attempts < maxAttempts) {
+            setTimeout(tryFix, 500)
+          } else {
+            console.warn("修复播放器列表功能失败，已达到最大尝试次数")
+            return false
+          }
+        }
+
+        tryFix()
       }
 
       function autoPlayMusic() {
         console.log("尝试自动播放音乐...")
 
         let attempts = 0
-        const maxAttempts = 15
+        const maxAttempts = 20
 
-        const tryPlay = setInterval(function () {
+        const tryPlay = () => {
           attempts++
+
+          console.log(`自动播放尝试 ${attempts}/${maxAttempts}`)
 
           // 方法1：通过APlayer实例
           if (window.aplayers && window.aplayers.length > 0) {
             const player = window.aplayers[0]
-            if (player && player.audio.paused) {
-              player.play()
-              console.log("音乐播放器：通过APlayer实例播放成功")
-              clearInterval(tryPlay)
+            if (player && player.audio && player.audio.paused) {
+              // 先设置音量
+              player.volume(0.6, true)
+
+              // 尝试播放
+              const playPromise = player.play()
+
+              if (playPromise !== undefined) {
+                playPromise
+                  .then(() => {
+                    console.log("音乐播放器：自动播放成功")
+                    clearInterval(playInterval)
+                  })
+                  .catch((error) => {
+                    console.warn("自动播放被阻止:", error)
+                    // 如果被阻止，等待用户交互
+                    setupUserInteractionPlay()
+                  })
+              } else {
+                console.log("音乐播放器：通过APlayer实例播放成功")
+                clearInterval(playInterval)
+              }
               return
             }
           }
@@ -2272,16 +2353,83 @@
           if (playButton && playButton.title !== "暂停") {
             playButton.click()
             console.log("音乐播放器：通过点击按钮播放成功")
-            clearInterval(tryPlay)
+            clearInterval(playInterval)
+            return
+          }
+
+          // 方法3：直接调用audio元素的play方法
+          const audioElement = document.querySelector(".aplayer audio")
+          if (audioElement && audioElement.paused) {
+            audioElement
+              .play()
+              .then(() => {
+                console.log("音乐播放器：通过audio元素播放成功")
+                clearInterval(playInterval)
+              })
+              .catch((error) => {
+                console.warn("audio元素播放被阻止:", error)
+                setupUserInteractionPlay()
+              })
             return
           }
 
           // 达到最大尝试次数
           if (attempts >= maxAttempts) {
             console.warn("音乐播放器：自动播放失败，可能需要手动点击播放")
-            clearInterval(tryPlay)
+            clearInterval(playInterval)
+
+            // 显示提示
+            const playerContainer = document.getElementById(
+              "music-player-container",
+            )
+            if (playerContainer) {
+              const tip = document.createElement("div")
+              tip.innerHTML = `
+          <div style="text-align:center;color:#ff6b6b;font-size:12px;margin-top:5px;">
+            点击播放按钮开始音乐
+          </div>
+        `
+              playerContainer.appendChild(tip)
+            }
+
+            // 设置用户交互播放
+            setupUserInteractionPlay()
           }
-        }, 500)
+        }
+
+        const playInterval = setInterval(tryPlay, 1000)
+
+        // 设置用户交互播放
+        function setupUserInteractionPlay() {
+          // 清除之前的监听器
+          document.removeEventListener("click", userInteractionPlay)
+
+          // 添加新的监听器
+          document.addEventListener("click", userInteractionPlay)
+
+          // 10秒后移除监听器
+          setTimeout(() => {
+            document.removeEventListener("click", userInteractionPlay)
+          }, 10000)
+        }
+
+        function userInteractionPlay() {
+          console.log("用户交互，尝试播放音乐...")
+
+          if (window.aplayers && window.aplayers.length > 0) {
+            const player = window.aplayers[0]
+            if (player && player.audio.paused) {
+              player.play()
+              console.log("用户交互后播放成功")
+            }
+          }
+
+          // 移除监听器
+          document.removeEventListener("click", userInteractionPlay)
+        }
+
+        // 立即尝试一次
+        tryPlay()
       }
 
       // ==================== 通用工具函数 ====================
@@ -2338,7 +2486,7 @@
           subtree: true,
         })
 
-        setTimeout(attachHoverEffects, 500)
+        setTimeout(attachHoverEffects, 2000) // 延长等待时间
       }
 
       function attachHoverEffects() {
@@ -2431,33 +2579,107 @@
       function initCustomContent() {
         console.log("初始化自定义内容...")
 
-        // ====== 新增代码开始 ======
-        // 确保 API 配置生效（双重保险）
-        if (window.OPENLIST_CONFIG && !window.OPENLIST_CONFIG.api) {
-          console.warn("检测到 OPENLIST_CONFIG.api 未设置，自动设置为 /api")
-          window.OPENLIST_CONFIG.api = "/api"
+        const customizeDiv = document.getElementById("customize")
+        if (customizeDiv) {
+          // 延迟显示自定义内容，等待OpenList完全加载
+          setTimeout(() => {
+            customizeDiv.style.display = "block"
+            console.log("自定义内容已显示")
+
+            // 检查OpenList是否已加载
+            const rootElement = document.getElementById("root")
+            if (rootElement && rootElement.children.length > 0) {
+              console.log("OpenList已加载完成")
+            }
+          }, 2000) // 增加延迟，确保OpenList先加载
         }
 
-        if (!window.ALIST_API_BASE) {
-          console.warn("检测到 ALIST_API_BASE 未设置，自动设置为 /api")
-          window.ALIST_API_BASE = "/api"
+        // 初始化Twikoo
+        if (typeof twikoo === "object") {
+          try {
+            twikoo.init({
+              envId: "https://shitcomment.vercel.app",
+              el: "#tcomment",
+              path: location.pathname,
+              lang: "zh-CN",
+            })
+            console.log("Twikoo评论系统初始化成功")
+          } catch (e) {
+            console.error("Twikoo初始化失败:", e)
+          }
         }
-
-        // 打印当前 API 配置
-        console.log("当前 API 配置:", {
-          openlistApi: window.OPENLIST_CONFIG?.api,
-          alistApi: window.ALIST_API_BASE,
-          fullUrl:
-            window.location.origin + (window.OPENLIST_CONFIG?.api || "/api"),
-        })
-        // ====== 新增代码结束 ======
-
-        // 现有代码...
 
         initThemeToggleButton()
-        setTimeout(initFileHoverEffects, 500)
         window.dispatchEvent(new Event("passwordVerified"))
+
+        // 启动API健康检查
+        setTimeout(() => {
+          checkAPIHealth()
+        }, 3000)
       }
+
+      // ==================== API健康检查 ====================
+      function checkAPIHealth() {
+        console.log("开始API健康检查...")
+
+        const apiUrl = window.OPENLIST_CONFIG?.api || "/api"
+        const testUrl = `${apiUrl}/fs/list?path=/`
+
+        console.log(`测试API: ${testUrl}`)
+
+        fetch(testUrl)
+          .then((response) => {
+            console.log(`API响应状态: ${response.status}`)
+            if (response.ok) {
+              return response.json()
+            }
+            throw new Error(`API响应错误: ${response.status}`)
+          })
+          .then((data) => {
+            console.log("API数据接收成功:", {
+              code: data.code,
+              message: data.message,
+              文件数量: data.data?.content?.length || 0,
+            })
+
+            if (data.code === 200) {
+              console.log("✓ API正常工作，文件列表已获取")
+
+              // 检查OpenList界面是否显示
+              setTimeout(() => {
+                const fileItems = document.querySelectorAll(".obj-box .item")
+                console.log(`检测到文件列表项: ${fileItems.length}个`)
+
+                if (fileItems.length === 0) {
+                  console.warn("文件列表DOM未找到，可能是CSS样式问题")
+                }
+              }, 3000)
+            } else {
+              console.error("API返回错误代码:", data.code, data.message)
+            }
+          })
+          .catch((error) => {
+            console.error("API请求失败:", error)
+
+            // 尝试备用API
+            const fallbackUrl = "/api/fs/list?path=/"
+            if (testUrl !== fallbackUrl) {
+              console.log("尝试备用API:", fallbackUrl)
+              fetch(fallbackUrl)
+                .then((r) => r.json())
+                .then((d) => console.log("备用API结果:", d))
+                .catch((e) => console.error("备用API也失败:", e))
+            }
+          })
+      }
+
+      // 在密码验证通过后调用
+      window.addEventListener("passwordVerified", function () {
+        setTimeout(() => {
+          checkAPIHealth()
+        }, 3000)
+      })
+
       // ==================== 自定义主题切换按钮 ====================
       function initThemeToggleButton() {
         // 移除现有的主题切换按钮
@@ -2561,7 +2783,7 @@
         console.log("广告关闭状态:", localStorage.getItem("floating_ad_closed"))
         console.log("广告容器:", document.getElementById("custom-ad-container"))
         console.log("音乐播放器状态:", musicPlayerInitialized)
-        console.log("MetingJS 状态:", typeof window.Meting)
+        console.log("MetingJS 状态:", typeof MetingJSElement)
         console.log("APlayer 状态:", typeof APlayer)
 
         const banData = localStorage.getItem(PASSWORD_CONFIG.permanentBanKey)
@@ -2585,6 +2807,51 @@
       }
 
       window.forceRemoveBan = forceRemoveBan
+
+      // 页面完全加载后的最终检查
+      window.addEventListener("load", function () {
+        console.log("页面加载完成，最终检查配置...")
+
+        // 检查 OpenList 配置
+        if (!window.OPENLIST_CONFIG || !window.OPENLIST_CONFIG.api) {
+          console.error("错误: OPENLIST_CONFIG 或 api 配置缺失！")
+
+          // 尝试修复
+          window.OPENLIST_CONFIG = window.OPENLIST_CONFIG || {
+            cdn: undefined,
+            base_path: undefined,
+            api: "/api",
+            main_color: undefined,
+          }
+
+          if (!window.OPENLIST_CONFIG.api) {
+            window.OPENLIST_CONFIG.api = "/api"
+          }
+
+          console.log("已自动修复配置:", window.OPENLIST_CONFIG)
+        }
+
+        // 测试 API 连接
+        setTimeout(function () {
+          console.log("测试 API 连接...")
+          fetch("/api/fs/list?path=/")
+            .then((response) => {
+              console.log("API 测试结果:", {
+                status: response.status,
+                ok: response.ok,
+                cached: response.headers.get("CF-Cache-Status") || "none",
+              })
+              return response.json()
+            })
+            .then((data) => {
+              console.log("API 数据格式:", data.code === 200 ? "正确" : "错误")
+              console.log("文件列表数量:", data.data?.content?.length || 0)
+            })
+            .catch((error) => {
+              console.error("API 连接失败:", error)
+            })
+        }, 2000)
+      })
     </script>
 
     <!--延迟加载-->
@@ -2821,51 +3088,4 @@
       ></script>
     </div>
   </body>
-  <!-- 额外的配置检查 -->
-  <script>
-    // 页面完全加载后的最终检查
-    window.addEventListener("load", function () {
-      console.log("页面加载完成，最终检查配置...")
-
-      // 检查 OpenList 配置
-      if (!window.OPENLIST_CONFIG || !window.OPENLIST_CONFIG.api) {
-        console.error("错误: OPENLIST_CONFIG 或 api 配置缺失！")
-
-        // 尝试修复
-        window.OPENLIST_CONFIG = window.OPENLIST_CONFIG || {
-          cdn: undefined,
-          base_path: undefined,
-          api: "/api",
-          main_color: undefined,
-        }
-
-        if (!window.OPENLIST_CONFIG.api) {
-          window.OPENLIST_CONFIG.api = "/api"
-        }
-
-        console.log("已自动修复配置:", window.OPENLIST_CONFIG)
-      }
-
-      // 测试 API 连接
-      setTimeout(function () {
-        console.log("测试 API 连接...")
-        fetch("/api/fs/list?path=/")
-          .then((response) => {
-            console.log("API 测试结果:", {
-              status: response.status,
-              ok: response.ok,
-              cached: response.headers.get("CF-Cache-Status") || "none",
-            })
-            return response.json()
-          })
-          .then((data) => {
-            console.log("API 数据格式:", data.code === 200 ? "正确" : "错误")
-            console.log("文件列表数量:", data.data?.content?.length || 0)
-          })
-          .catch((error) => {
-            console.error("API 连接失败:", error)
-          })
-      }, 2000)
-    })
-  </script>
 </html>
