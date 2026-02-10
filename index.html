@@ -2,6 +2,1559 @@
 <html lang="en" translate="no">
   <head>
     <!-- customize head -->
+    <!--鼠标点击效果-->
+    <script src="https://cdn.jsdelivr.net/gh/TRHX/CDN-for-itrhx.com@3.0.8/js/maodian.js"></script>
+
+    <!--Alist V3建议添加的，已经默认添加了，如果你的没有建议加上-->
+    <script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=String.prototype.replaceAll"></script>
+
+    <!--引入字体，全局字体使用-->
+    <link
+      rel="stylesheet"
+      href="https://npm.elemecdn.com/lxgw-wenkai-webfont@1.1.0/lxgwwenkai-regular.css"
+    />
+
+    <!-- Twikoo 核心库 (仅加载，初始化在内容代码中完成) -->
+    <script src="https://cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.min.js"></script>
+
+    <!--不蒜子计数器-->
+    <script async src="https://busuanzi.9420.ltd/js"></script>
+
+    <!-- Font6，自定义底部使用和看板娘使用的图标和字体文件-->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://npm.elemecdn.com/font6pro@6.3.0/css/fontawesome.min.css"
+      media="all"
+    />
+    <link
+      href="https://npm.elemecdn.com/font6pro@6.3.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!--音乐播放器所用的文件-->
+    <!-- require APlayer -->
+    <link
+      rel="stylesheet"
+      href="https://npm.elemecdn.com/aplayer@1.10.1/dist/APlayer.min.css"
+    />
+    <script src="https://npm.elemecdn.com/aplayer@1.10.1/dist/APlayer.min.js"></script>
+    <!-- MetingJS 改为在密码验证后加载，这里先不加载 -->
+
+    <!-- 雨滴特效脚本 -->
+    <script>
+      // 雨滴特效脚本
+      document.addEventListener("DOMContentLoaded", function () {
+        // 如果已经存在画布，先移除
+        const existingCanvas = document.getElementById("rainCanvas")
+        if (existingCanvas) {
+          existingCanvas.remove()
+        }
+
+        // 创建画布
+        const canvas = document.createElement("canvas")
+        canvas.id = "rainCanvas"
+        canvas.style.position = "fixed"
+        canvas.style.top = "0"
+        canvas.style.left = "0"
+        canvas.style.width = "100%"
+        canvas.style.height = "100%"
+        canvas.style.pointerEvents = "none"
+        canvas.style.zIndex = "-1" // 确保在背景层
+        document.body.appendChild(canvas)
+
+        const ctx = canvas.getContext("2d")
+        let width = (canvas.width = window.innerWidth)
+        let height = (canvas.height = window.innerHeight)
+
+        // 雨滴数组
+        let rainDrops = []
+        const rainDropCount = 100 // 雨滴数量
+
+        // 雨滴类
+        class RainDrop {
+          constructor() {
+            this.reset()
+          }
+
+          reset() {
+            this.x = Math.random() * width
+            this.y = Math.random() * -height
+            this.speed = 2 + Math.random() * 5
+            this.length = 10 + Math.random() * 20
+            this.opacity = 0.1 + Math.random() * 0.3
+          }
+
+          update() {
+            this.y += this.speed
+            if (this.y > height) {
+              this.reset()
+            }
+          }
+
+          draw() {
+            ctx.beginPath()
+            ctx.moveTo(this.x, this.y)
+            ctx.lineTo(this.x, this.y + this.length)
+            ctx.strokeStyle = `rgba(174, 194, 224, ${this.opacity})`
+            ctx.lineWidth = 1
+            ctx.stroke()
+          }
+        }
+
+        // 初始化雨滴
+        for (let i = 0; i < rainDropCount; i++) {
+          rainDrops.push(new RainDrop())
+        }
+
+        // 动画循环
+        function animate() {
+          ctx.clearRect(0, 0, width, height)
+          rainDrops.forEach((drop) => {
+            drop.update()
+            drop.draw()
+          })
+          requestAnimationFrame(animate)
+        }
+
+        // 窗口大小调整
+        window.addEventListener("resize", function () {
+          width = canvas.width = window.innerWidth
+          height = canvas.height = window.innerHeight
+        })
+
+        // 启动动画
+        animate()
+      })
+    </script>
+
+    <style>
+      /* 去除通知栏 右上角 X */
+      .notify-render .hope-close-button {
+        display: none;
+      }
+      /*去掉底部*/
+      .footer {
+        display: none !important;
+      }
+
+      /*
+    图片API用法点进去都会有食用说明的,API来自网络不保证时效性稳定性自己测试
+    樱花：https://www.dmoe.cc
+    夏沫：https://cdn.seovx.com
+    搏天：https://api.btstu.cn/doc/sjbz.php
+    姬长信：https://github.com/insoxin/API
+    小歪：https://api.ixiaowai.cn/
+    保罗：https://api.paugram.com
+    墨天逸：https://api.mtyqx.cn
+    岁月小筑：https://img.xjh.me
+    东方Project：https://img.paulzzh.com
+    */
+      /*白天背景图*/
+      .hope-ui-light {
+        background-image: url("https://www.dmoe.cc/random.php") !important;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+        background-position-x: center;
+      }
+      /*夜间背景图*/
+      .hope-ui-dark {
+        background-image: url("https://pic.rmb.bdstatic.com/bjh/ebe942a9de49856f389c65f25a338335.png") !important;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+        background-position-x: center;
+      }
+
+      /*主列表白天模式透明*/
+      .obj-box.hope-stack.hope-c-dhzjXW.hope-c-PJLV.hope-c-PJLV-igScBhH-css {
+        background-color: rgba(255, 255, 255, 0.5) !important;
+      }
+      /*主列表夜间模式透明*/
+      .obj-box.hope-stack.hope-c-dhzjXW.hope-c-PJLV.hope-c-PJLV-iigjoxS-css {
+        background-color: rgb(0 0 0 / 50%) !important;
+      }
+      /*readme白天模式透明*/
+      .hope-c-PJLV.hope-c-PJLV-ikSuVsl-css {
+        background-color: rgba(255, 255, 255, 0.5) !important;
+      }
+      /*readme夜间模式透明*/
+      .hope-c-PJLV.hope-c-PJLV-iiuDLME-css {
+        background-color: rgb(0 0 0 / 50%) !important;
+      }
+
+      /*顶部右上角切换按钮透明*/
+      .hope-ui-light .hope-c-ivMHWx-hZistB-cv.hope-icon-button {
+        background-color: rgba(255, 255, 255, 0.5) !important;
+      }
+      .hope-ui-dark .hope-c-ivMHWx-hZistB-cv.hope-icon-button {
+        background-color: rgb(0 0 0 / 50%) !important;
+      }
+
+      /*右下角侧边栏按钮透明 第一个是白天 第二个是夜间*/
+      .hope-ui-light .hope-c-PJLV-ijgzmFG-css {
+        background-color: rgba(255, 255, 255, 0.5) !important;
+      }
+      .hope-ui-dark .hope-c-PJLV-ijgzmFG-css {
+        background-color: rgb(0 0 0 / 50%) !important;
+      }
+      /*白天模式代码块透明*/
+      .hope-ui-light pre {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+      }
+      /*夜间模式代码块透明*/
+      .hope-ui-dark pre {
+        background-color: rgba(255, 255, 255, 0) !important;
+      }
+
+      /*左侧侧边栏目录*/
+      /*白天模式*/
+      .hope-ui-light .hope-c-PJLV-ieGWMbI-css {
+        background: rgba(255, 255, 255, 0.5) !important;
+      }
+      /*夜间模式*/
+      .hope-ui-dark .hope-c-PJLV-ieGWMbI-css {
+        background-color: rgb(0 0 0 / 50%) !important;
+      }
+      /* 返回顶部 */
+      .hope-c-PJLV-ihVEsOa-css {
+        background: rgba(255, 255, 255, 0.5) !important;
+      }
+      .hope-ui-dark .hope-c-PJLV-ihVEsOa-css {
+        background-color: rgb(0 0 0 / 50%) !important;
+      }
+
+      /*顶部*/
+      #root > .header {
+        background: rgba(255, 255, 255, 0);
+      }
+      /*导航条*/
+      /*白天模式*/
+      .hope-ui-light .body > .nav {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: var(--hope-radii-xl);
+      }
+      /*夜间模式*/
+      .hope-ui-dark .body > .nav {
+        background-color: rgb(0 0 0 / 50%);
+        border-radius: var(--hope-radii-xl);
+      }
+      /*隐藏导航条遮罩*/
+      .body > .nav::after {
+        display: none;
+      }
+
+      /*底部CSS，.App .table这三个一起的*/
+      dibu {
+        border-top: 0px;
+        position: relative; /* 改为relative，避免绝对定位导致高度问题 */
+        bottom: 0;
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+      .App {
+        min-height: 85vh;
+      }
+      .table {
+        margin: auto;
+      }
+
+      /*全局字体*/
+      * {
+        font-family: LXGW WenKai;
+      }
+      * {
+        font-weight: bold;
+      }
+      body {
+        font-family: LXGW WenKai;
+      }
+
+      /* ==================== 优化后的Twikoo评论区样式 ==================== */
+      /* 评论容器 - 进一步变窄 */
+      .tk-container,
+      #tcomment {
+        max-width: min(
+          85%,
+          640px
+        ) !important; /* 进一步变窄：从720px改为640px */
+        margin: 0 auto !important;
+        padding: 20px !important;
+        border-radius: 20px !important;
+
+        /* 毛玻璃效果 - iOS风格 */
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+        background: rgba(255, 255, 255, 0.25) !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+      }
+
+      /* 夜间模式调整 */
+      .hope-ui-dark .tk-container,
+      .hope-ui-dark #tcomment {
+        background: rgba(0, 0, 0, 0.25) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+      }
+
+      /* 评论输入区域 - 进一步变窄 */
+      .tk-comment-input {
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        border-radius: 16px !important;
+        padding: 20px !important;
+
+        /* 毛玻璃效果 */
+        backdrop-filter: blur(15px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
+        background: rgba(255, 255, 255, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      }
+
+      /* 夜间模式输入区域 */
+      .hope-ui-dark .tk-comment-input {
+        background: rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      }
+
+      /* 单个评论项 - 限制宽度，不铺满 */
+      .tk-comment {
+        max-width: 100% !important;
+        width: 100% !important;
+        backdrop-filter: blur(10px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(10px) saturate(180%) !important;
+        background: rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 16px !important;
+        padding: 16px !important;
+        margin-bottom: 16px !important;
+        box-sizing: border-box !important;
+      }
+
+      /* 夜间模式评论项 */
+      .hope-ui-dark .tk-comment {
+        background: rgba(0, 0, 0, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      }
+
+      /* 评论内容区域 - 防止过宽 */
+      .tk-content {
+        max-width: 100% !important;
+        width: 100% !important;
+        line-height: 1.6 !important;
+        font-size: 14px !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+      }
+
+      /* 评论回复区域 */
+      .tk-reply {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin-top: 16px !important;
+        padding-left: 16px !important;
+        border-left: 3px solid rgba(102, 126, 234, 0.3) !important;
+        box-sizing: border-box !important;
+      }
+
+      /* 评论输入框 - 宽度限制 */
+      .tk-input.el-textarea,
+      .tk-input.el-textarea .el-textarea__inner,
+      .tk-textarea .el-textarea__inner {
+        max-width: 100% !important;
+        width: 100% !important;
+        border-radius: 12px !important;
+        padding: 12px !important;
+        background: rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-sizing: border-box !important;
+      }
+
+      /* 夜间模式输入框 */
+      .hope-ui-dark .tk-input.el-textarea .el-textarea__inner,
+      .hope-ui-dark .tk-textarea .el-textarea__inner {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        color: #e2e8f0 !important;
+      }
+
+      /* 评论提交按钮 */
+      .tk-comment-btn {
+        border-radius: 12px !important;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 100%
+        ) !important;
+        border: none !important;
+        color: white !important;
+        font-weight: 600 !important;
+        padding: 10px 24px !important;
+        transition: all 0.3s ease !important;
+      }
+
+      .tk-comment-btn:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+      }
+
+      /* 移动端响应式调整 */
+      @media (max-width: 768px) {
+        .tk-container,
+        #tcomment {
+          max-width: 92% !important;
+          padding: 16px !important;
+          margin: 0 auto 20px auto !important;
+          border-radius: 16px !important;
+        }
+
+        .tk-comment-input {
+          padding: 16px !important;
+          border-radius: 14px !important;
+        }
+
+        .tk-comment {
+          padding: 14px !important;
+          border-radius: 14px !important;
+        }
+
+        /* 减小毛玻璃模糊度以提升移动端性能 */
+        .tk-container,
+        .tk-comment-input,
+        .tk-comment {
+          backdrop-filter: blur(10px) saturate(160%) !important;
+          -webkit-backdrop-filter: blur(10px) saturate(160%) !important;
+        }
+      }
+
+      /* 小屏幕手机进一步优化 */
+      @media (max-width: 480px) {
+        .tk-container,
+        #tcomment {
+          max-width: 96% !important;
+          padding: 12px !important;
+          border-radius: 14px !important;
+        }
+
+        .tk-comment-input {
+          padding: 12px !important;
+        }
+
+        .tk-comment {
+          padding: 12px !important;
+        }
+
+        /* 进一步减小模糊度以优化性能 */
+        .tk-container,
+        .tk-comment-input,
+        .tk-comment {
+          backdrop-filter: blur(8px) saturate(140%) !important;
+          -webkit-backdrop-filter: blur(8px) saturate(140%) !important;
+        }
+      }
+      /* ==================== 优化后的Twikoo评论区样式结束 ==================== */
+
+      /* 【修正】为 Twikoo 添加跳舞小人背景 */
+      .tk-input.el-textarea {
+        background-image: url("https://cdn.jsdelivr.net/gh/anwen-anyi/imgAnwen/images/OuNiJiang.gif");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: right bottom;
+        transition: all 0.25s ease-in-out 0s;
+      }
+      /* 当用户点击输入框时，小人移动 */
+      .tk-input.el-textarea:focus-within {
+        background-position-y: 120px;
+        transition: all 0.25s ease-in-out 0s;
+      }
+
+      /* ==================== 自定义主题切换按钮样式 ==================== */
+      /* 添加在右下角设置按钮左侧的主题切换按钮 */
+      .custom-theme-toggle {
+        position: fixed;
+        right: 70px; /* 在设置按钮左侧 */
+        bottom: 20px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .hope-ui-dark .custom-theme-toggle {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .custom-theme-toggle:hover {
+        transform: scale(1.1);
+        background: rgba(255, 255, 255, 0.4);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .hope-ui-dark .custom-theme-toggle:hover {
+        background: rgba(0, 0, 0, 0.4);
+      }
+
+      .custom-theme-toggle i {
+        font-size: 20px;
+        color: #333;
+        transition: all 0.3s ease;
+      }
+
+      .hope-ui-dark .custom-theme-toggle i {
+        color: #fff;
+      }
+
+      /* 移动端调整 */
+      @media (max-width: 768px) {
+        .custom-theme-toggle {
+          right: 65px;
+          bottom: 15px;
+          width: 40px;
+          height: 40px;
+        }
+
+        .custom-theme-toggle i {
+          font-size: 18px;
+        }
+      }
+      /* ==================== 自定义主题切换按钮样式结束 ==================== */
+
+      /* ==================== 音乐播放器样式修复 ==================== */
+      /* 确保音乐播放器在左侧显示 */
+      .aplayer {
+        z-index: 999 !important;
+      }
+
+      /* 音乐播放器在左侧显示 */
+      .aplayer.aplayer-withlist {
+        left: 0 !important;
+        bottom: 20px !important;
+        width: 300px !important;
+      }
+
+      .aplayer.aplayer-withlist .aplayer-list {
+        max-height: 400px !important;
+        overflow-y: auto !important;
+      }
+
+      /* 音乐播放器折叠状态 */
+      .aplayer.aplayer-withlist .aplayer-list {
+        display: block !important;
+      }
+
+      /* 确保播放器不覆盖其他内容 */
+      @media (max-width: 768px) {
+        .aplayer.aplayer-withlist {
+          width: 280px !important;
+        }
+      }
+      /* ==================== 音乐播放器样式修复结束 ==================== */
+
+      /* ==================== 密码弹窗样式 ==================== */
+      #passwordMask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(10px);
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: LXGW WenKai;
+      }
+
+      #passwordPopup {
+        width: 420px;
+        max-width: 90%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 24px;
+        padding: 40px 32px;
+        text-align: center;
+        font-family: LXGW WenKai;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+        transform: translateY(20px);
+        opacity: 0;
+        animation: fadeInUp 0.5s ease forwards;
+      }
+
+      @keyframes fadeInUp {
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .popup-title {
+        margin: 0 0 12px 0;
+        font-size: 32px;
+        font-weight: 700;
+        color: white;
+        letter-spacing: 1px;
+      }
+
+      .popup-subtitle {
+        margin: 0 0 30px 0;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .input-container {
+        position: relative;
+        margin: 25px 0;
+      }
+
+      .password-input {
+        width: 100%;
+        padding: 18px 20px;
+        font-size: 16px;
+        border-radius: 15px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        outline: none;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        font-family: LXGW WenKai;
+      }
+
+      .password-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .password-input:focus {
+        border-color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+      }
+
+      .button-container {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+      }
+
+      .verify-btn,
+      .reset-btn {
+        flex: 1;
+        padding: 16px 0;
+        border-radius: 15px;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+        font-family: LXGW WenKai;
+      }
+
+      .verify-btn {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white;
+        box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+      }
+
+      .reset-btn {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+      }
+
+      .verify-btn:hover,
+      .reset-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      .error-message {
+        color: #ff6b6b;
+        font-size: 14px;
+        margin-top: 12px;
+        min-height: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .error-message.show {
+        opacity: 1;
+      }
+
+      .hint-text {
+        margin-top: 25px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 480px) {
+        #passwordPopup {
+          padding: 30px 24px;
+          width: 90%;
+        }
+
+        .popup-title {
+          font-size: 28px;
+        }
+
+        .button-container {
+          flex-direction: column;
+          gap: 12px;
+        }
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+          transform: translateX(-8px);
+        }
+        20%,
+        40%,
+        60%,
+        80% {
+          transform: translateX(8px);
+        }
+      }
+      /* ==================== 密码弹窗样式结束 ==================== */
+
+      /* ==================== 点击烟花特效样式 ==================== */
+      .pointer {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: #00e0ff;
+        border-radius: 50%;
+        z-index: 999999;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        display: none;
+      }
+
+      .is-pressed .pointer {
+        display: block;
+      }
+
+      .is-longpress .pointer {
+        animation: pulse 0.5s infinite alternate;
+      }
+
+      @keyframes pulse {
+        from {
+          transform: translate(-50%, -50%) scale(1);
+        }
+        to {
+          transform: translate(-50%, -50%) scale(1.5);
+        }
+      }
+
+      /* 确保点击特效画布不影响其他元素 */
+      canvas[style*="pointer-events: none"] {
+        z-index: 99999 !important;
+      }
+
+      /* 点击特效与密码弹窗的层级关系 */
+      #passwordMask {
+        z-index: 1000000 !important;
+      }
+      /* ==================== 点击烟花特效样式结束 ==================== */
+      /* ==================== 碰撞弹窗式浮动广告样式 ==================== */
+      #custom-ad-container {
+        position: fixed;
+        width: 160px;
+        z-index: 9999;
+        animation:
+          moveAd 25s linear infinite alternate,
+          bounce 3s ease-in-out infinite,
+          rotateAd 30s linear infinite;
+        pointer-events: auto;
+        display: none; /* 初始隐藏，通过JS控制显示 */
+        transform-origin: center center;
+      }
+
+      /* 广告链接样式 */
+      #custom-ad-container a {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      /* 广告主容器 */
+      #custom-ad {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        border: 1px solid #eaeaea;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      /* 添加点击提示效果 */
+      #custom-ad::after {
+        content: "点击访问";
+        position: absolute;
+        bottom: -5px;
+        right: 5px;
+        background: rgba(102, 126, 234, 0.9);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 9px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 3;
+      }
+
+      #custom-ad:hover::after {
+        opacity: 1;
+      }
+
+      #custom-ad:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      /* 图片容器 */
+      .ad-image-container {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .ad-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      #custom-ad:hover .ad-image-container img {
+        transform: scale(1.1);
+      }
+
+      /* 广告标签 */
+      .ad-label {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 2px 8px;
+        font-size: 10px;
+        border-radius: 10px;
+        font-weight: bold;
+        z-index: 3;
+      }
+
+      /* 关闭按钮 - 提高z-index确保在链接之上 */
+      .ad-close-btn {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 24px;
+        height: 24px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s ease;
+        z-index: 10; /* 提高z-index确保按钮在最上层 */
+      }
+
+      .ad-close-btn:hover {
+        background: rgba(255, 0, 0, 0.8);
+        transform: scale(1.1);
+      }
+
+      /* 为关闭按钮添加提示 */
+      .ad-close-btn::after {
+        content: "关闭广告";
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+        z-index: 11;
+      }
+
+      .ad-close-btn:hover::after {
+        opacity: 1;
+      }
+
+      /* 文字区域 */
+      .ad-text {
+        padding: 12px;
+        text-align: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      }
+
+      .ad-text h4 {
+        margin: 0 0 6px 0;
+        font-size: 14px;
+        color: #333;
+        font-weight: bold;
+      }
+
+      .ad-text p {
+        margin: 0;
+        font-size: 11px;
+        color: #666;
+        line-height: 1.4;
+      }
+
+      /* 碰撞弹窗动画 */
+      @keyframes moveAd {
+        0% {
+          top: 10%;
+          left: 5%;
+        }
+        15% {
+          top: 70%;
+          left: 10%;
+        }
+        30% {
+          top: 20%;
+          left: 85%;
+        }
+        45% {
+          top: 75%;
+          left: 80%;
+        }
+        60% {
+          top: 15%;
+          left: 15%;
+        }
+        75% {
+          top: 80%;
+          left: 25%;
+        }
+        90% {
+          top: 30%;
+          left: 90%;
+        }
+        100% {
+          top: 10%;
+          left: 5%;
+        }
+      }
+
+      /* 添加反弹效果 */
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* 旋转动画 */
+      @keyframes rotateAd {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* 夜间模式适配 */
+      .hope-ui-dark #custom-ad {
+        background: #2d3748;
+        border-color: #4a5568;
+      }
+
+      .hope-ui-dark .ad-text {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+      }
+
+      .hope-ui-dark .ad-text h4 {
+        color: #e2e8f0;
+      }
+
+      .hope-ui-dark .ad-text p {
+        color: #a0aec0;
+      }
+
+      /* 响应式设计：移动设备调整 */
+      @media (max-width: 768px) {
+        #custom-ad-container {
+          width: 140px;
+          animation-duration: 20s, 3s, 25s;
+        }
+
+        .ad-image-container {
+          height: 170px;
+        }
+
+        @keyframes moveAd {
+          0% {
+            top: 5%;
+            left: 5%;
+          }
+          25% {
+            top: 60%;
+            left: 10%;
+          }
+          50% {
+            top: 15%;
+            left: 80%;
+          }
+          75% {
+            top: 70%;
+            left: 75%;
+          }
+          100% {
+            top: 5%;
+            left: 5%;
+          }
+        }
+      }
+
+      @media (max-width: 480px) {
+        #custom-ad-container {
+          width: 120px;
+          animation-duration: 18s, 3s, 20s;
+        }
+
+        .ad-image-container {
+          height: 150px;
+        }
+
+        .ad-text {
+          padding: 8px;
+        }
+
+        .ad-text h4 {
+          font-size: 13px;
+        }
+
+        .ad-text p {
+          font-size: 10px;
+        }
+      }
+      /* ==================== 碰撞弹窗式浮动广告样式结束 ==================== */
+
+      /* ==================== 自定义鼠标指针样式 ==================== */
+      /* 通用默认指针 (通常为箭头) */
+      body,
+      html {
+        cursor:
+          url("https://cdn.jsdelivr.net/gh/Tomotoes/images/blog/default.cur"),
+          url("https://cdn.jsdelivr.net/gh/TRHX/CDN-for-itrhx.com@2.1.6/images/mouse.cur"),
+          auto;
+      }
+
+      /* 链接和按钮的悬停指针 (通常为小手) */
+      a:hover,
+      button:hover,
+      .hope-icon-button,
+      [role="button"] {
+        cursor:
+          url("https://cdn.jsdelivr.net/gh/Tomotoes/images/blog/pointer.cur"),
+          url("https://cdn.jsdelivr.net/gh/TRHX/CDN-for-itrhx.com@2.1.6/cursor/link.cur"),
+          pointer;
+      }
+
+      /* 文本输入框指针 (I字形) */
+      input[type="text"],
+      input[type="password"],
+      textarea {
+        cursor:
+          url("https://cdn.jsdelivr.net/gh/Tomotoes/images/blog/text.cur"),
+          url("https://cdn.jsdelivr.net/gh/TRHX/CDN-for-itrhx.com@2.1.6/cursor/text.cur"),
+          text;
+      }
+
+      /* 文本输入框获得焦点时的指针 */
+      input[type="text"]:focus,
+      input[type="password"]:focus,
+      textarea:focus {
+        cursor:
+          url("https://cdn.jsdelivr.net/gh/Tomotoes/images/blog/text-select.cur"),
+          url("https://cdn.jsdelivr.net/gh/TRHX/CDN-for-itrhx.com@2.1.6/cursor/text.cur"),
+          text;
+      }
+
+      /* 下拉选择框指针 */
+      select {
+        cursor:
+          url("https://cdn.jsdelivr.net/gh/Tomotoes/images/blog/pointer.cur"),
+          url("https://cdn.jsdelivr.net/gh/TRHX/CDN-for-itrhx.com@2.1.6/cursor/link.cur"),
+          pointer;
+      }
+
+      /* 代码块指针 (通常与默认相同) */
+      code,
+      pre code {
+        cursor:
+          url("https://cdn.jsdelivr.net/gh/Tomotoes/images/blog/default.cur"),
+          url("https://cdn.jsdelivr.net/gh/TRHX/CDN-for-itrhx.com@2.1.6/images/mouse.cur"),
+          default;
+      }
+      /* ==================== 自定义鼠标指针样式结束 ==================== */
+
+      /* ==================== 嵌入式公告栏样式 ==================== */
+      #custom-announcement-card {
+        width: min(96%, 940px) !important;
+        margin: 8px auto 20px auto !important;
+        padding: var(--hope-space-4) var(--hope-space-6) !important;
+        border-radius: var(--hope-radii-xl) !important;
+        box-shadow: var(--hope-shadows-lg) !important;
+        animation: fadeInUp 0.5s ease !important;
+        position: relative !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+      }
+
+      .hope-ui-light #custom-announcement-card {
+        background-color: rgba(255, 255, 255, 0.4) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      }
+
+      .hope-ui-dark #custom-announcement-card {
+        background-color: rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+      }
+
+      .announcement-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid;
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+      .hope-ui-light .announcement-header {
+        border-bottom-color: rgba(0, 0, 0, 0.1);
+        color: #2d3748;
+      }
+      .hope-ui-dark .announcement-header {
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+      }
+
+      .announcement-body {
+        font-family: LXGW WenKai;
+        line-height: 1.6;
+        font-size: 14px;
+      }
+      .announcement-body a {
+        color: #409eff;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .announcement-body a:hover {
+        text-decoration: underline;
+      }
+      .announcement-body strong {
+        color: #f56565;
+      }
+      .announcement-body img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 10px 0;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        display: block;
+      }
+      .hope-ui-dark .announcement-body img {
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+
+      @media (max-width: 768px) {
+        #custom-announcement-card {
+          width: min(94%, 100%) !important;
+          margin: 6px auto 16px auto !important;
+          padding: var(--hope-space-3) var(--hope-space-4) !important;
+        }
+      }
+      /* ==================== 嵌入式公告栏样式结束 ==================== */
+
+      /* ==================== 永久封禁界面样式 ==================== */
+      #permanentBanMask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000001;
+        display: none;
+        overflow: hidden;
+        font-family: LXGW WenKai;
+      }
+
+      #banPopup {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.1);
+        width: 90%;
+        height: 90%;
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        animation: banPopupAppear 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)
+          forwards;
+      }
+
+      @keyframes banPopupAppear {
+        0% {
+          transform: translate(-50%, -50%) scale(0.1);
+          opacity: 0;
+          border-radius: 50%;
+        }
+        20% {
+          transform: translate(-50%, -50%) scale(1.2);
+          opacity: 1;
+          border-radius: 30px;
+        }
+        40% {
+          transform: translate(-50%, -50%) scale(0.95);
+        }
+        60% {
+          transform: translate(-50%, -50%) scale(1.05);
+        }
+        80% {
+          transform: translate(-50%, -50%) scale(0.98);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+          border-radius: 30px;
+        }
+      }
+
+      .ban-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 40px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .ban-title {
+        font-size: 48px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #ff4444;
+        text-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        position: relative;
+        z-index: 2;
+      }
+
+      .ban-image-container {
+        width: 100%;
+        height: 60%;
+        border-radius: 20px;
+        overflow: hidden;
+        margin: 20px 0;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      }
+
+      .ban-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .ban-contact-btn {
+        position: absolute;
+        right: 30px;
+        bottom: 30px;
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 36px;
+        cursor: pointer;
+        z-index: 10;
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        animation: pulseBtn 2s infinite;
+      }
+
+      .ban-contact-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.6);
+      }
+
+      @keyframes pulseBtn {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .ban-timer {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.7);
+        z-index: 2;
+      }
+
+      @media (max-width: 768px) {
+        #banPopup {
+          width: 95%;
+          height: 95%;
+          border-radius: 20px;
+        }
+
+        .ban-content {
+          padding: 20px;
+        }
+
+        .ban-title {
+          font-size: 36px;
+          margin-bottom: 20px;
+        }
+
+        .ban-image-container {
+          height: 50%;
+        }
+
+        .ban-contact-btn {
+          width: 60px;
+          height: 60px;
+          font-size: 28px;
+          right: 20px;
+          bottom: 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .ban-title {
+          font-size: 28px;
+        }
+
+        .ban-content {
+          padding: 15px;
+        }
+
+        #banPopup {
+          border-radius: 15px;
+        }
+      }
+      /* ==================== 永久封禁界面样式结束 ==================== */
+      /* ==================== Alist文件列表悬停特效 ==================== */
+      /* 基础悬停效果增强 */
+      .obj-box .item,
+      .item {
+        transition: all 0.2s ease !important;
+        position: relative;
+        border-radius: var(--hope-radii-md) !important;
+      }
+
+      /* 颤抖动画关键帧 - 基础颤抖 */
+      @keyframes shakeBase {
+        0%,
+        100% {
+          transform: translateX(0) translateY(0);
+        }
+        25% {
+          transform: translateX(-1px) translateY(-1px);
+        }
+        50% {
+          transform: translateX(1px) translateY(1px);
+        }
+        75% {
+          transform: translateX(-1px) translateY(1px);
+        }
+      }
+
+      /* 中等颤抖 */
+      @keyframes shakeMedium {
+        0%,
+        100% {
+          transform: translateX(0) translateY(0);
+        }
+        25% {
+          transform: translateX(-2px) translateY(-2px);
+        }
+        50% {
+          transform: translateX(2px) translateY(2px);
+        }
+        75% {
+          transform: translateX(-2px) translateY(2px);
+        }
+      }
+
+      /* 强烈颤抖 */
+      @keyframes shakeStrong {
+        0%,
+        100% {
+          transform: translateX(0) translateY(0);
+        }
+        25% {
+          transform: translateX(-3px) translateY(-3px);
+        }
+        50% {
+          transform: translateX(3px) translateY(3px);
+        }
+        75% {
+          transform: translateX(-3px) translateY(3px);
+        }
+      }
+
+      /* 悬停状态 - 初始突出显示 */
+      .obj-box .item:hover,
+      .item:hover {
+        transform: scale(1.02);
+        z-index: 10;
+        position: relative;
+      }
+
+      /* 特效激活时的样式 */
+      .item.shaking {
+        animation-play-state: running !important;
+        z-index: 20 !important;
+        position: relative !important;
+      }
+
+      .item.rgb-effect {
+        animation: rpgRgbEffect 0.3s linear infinite !important;
+        z-index: 30 !important;
+        position: relative !important;
+        transform: scale(1.05) !important;
+        border-radius: var(--hope-radii-lg) !important;
+      }
+
+      /* 白天模式下的文件项基础样式 */
+      .hope-ui-light .obj-box .item,
+      .hope-ui-light .item {
+        transition: all 0.3s ease !important;
+      }
+
+      /* 夜间模式下的文件项基础样式 */
+      .hope-ui-dark .obj-box .item,
+      .hope-ui-dark .item {
+        transition: all 0.3s ease !important;
+      }
+
+      /* 夜间模式下的RGB效果增强 */
+      .hope-ui-dark .item.rgb-effect {
+        animation: rpgRgbEffect 0.25s linear infinite !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+      }
+      /* ==================== Alist文件列表悬停特效结束 ==================== */
+
+      /* ==================== 隐藏测试方块样式 ==================== */
+      /* 隐藏测试方块但保留文件列表悬停效果 */
+      .shaking-element {
+        display: none !important; /* 隐藏测试方块 */
+        visibility: hidden !important;
+      }
+
+      /* 但保留文件列表的悬停特效 */
+      .obj-box .item:hover,
+      .item:hover {
+        /* 保留原始效果 */
+      }
+      /* ==================== 隐藏测试方块样式结束 ==================== */
+      /* ==================== 音乐播放器修复样式 ==================== */
+      /* 确保列表按钮可点击 */
+      .aplayer-list-btn {
+        cursor: pointer !important;
+      }
+
+      /* 列表折叠时的按钮图标方向 */
+      .aplayer-list-btn .aplayer-icon {
+        transition: transform 0.3s ease !important;
+      }
+
+      .aplayer.aplayer-withlist .aplayer-list {
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease !important;
+      }
+
+      /* 确保播放器在左侧显示且列表默认折叠 */
+      .aplayer.aplayer-withlist {
+        left: 0 !important;
+        bottom: 20px !important;
+        width: 300px !important;
+      }
+
+      .aplayer.aplayer-withlist .aplayer-list {
+        display: none !important; /* 默认隐藏 */
+        max-height: 400px !important;
+        overflow-y: auto !important;
+      }
+
+      /* 列表展开时的样式 */
+      .aplayer.aplayer-withlist.aplayer-list-mini .aplayer-list {
+        display: block !important;
+      }
+    </style>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="same-origin" />
@@ -34,5 +1587,1232 @@
 
     <script src="/src/main.tsx" type="module"></script>
     <!-- customize body -->
+    <!-- 密码验证弹窗 - 放在最前面 -->
+    <div id="passwordMask">
+      <div id="passwordPopup">
+        <h1 class="popup-title">🔒 成人🔞验证</h1>
+        <div class="popup-subtitle">输入Pass_World雑鱼网盘</div>
+
+        <div class="input-container">
+          <input
+            type="password"
+            id="passwordInput"
+            class="password-input"
+            placeholder="输入访问密码,没有密码？👇"
+            autocomplete="off"
+          />
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+
+        <div class="button-container">
+          <button class="verify-btn" id="verifyBtn" onclick="verifyPassword()">
+            进入网盘
+          </button>
+          <button class="reset-btn" onclick="resetPassword()">重新输入</button>
+        </div>
+
+        <div class="hint-text">
+          如需访问密码，请在关注微信公众号「三紫在睡醒」发送「密码」<br />
+          回车键也可提交验证
+        </div>
+      </div>
+    </div>
+
+    <!-- 永久封禁界面 -->
+    <div id="permanentBanMask">
+      <div id="banPopup">
+        <div class="ban-content">
+          <h1 class="ban-title">🚫 你已经被网站封禁！</h1>
+
+          <div class="ban-image-container">
+            <img
+              src="https://i0.hdslb.com/bfs/new_dyn/4d1ac3772a12d093e9e9aab40e6df4f3432508175.png"
+              alt="封禁提示图片"
+            />
+          </div>
+
+          <p
+            style="
+              color: rgba(255, 255, 255, 0.8);
+              font-size: 18px;
+              margin-top: 20px;
+              position: relative;
+              z-index: 2;
+            "
+          >
+            由于多次尝试错误密码，您的访问已被永久封禁。<br />
+            如需解封，请联系网站管理员。
+          </p>
+
+          <a
+            href="https://mp.weixin.qq.com/s/T6OYNp-pF8Yv73tVnc-xHQ"
+            target="_blank"
+            class="ban-contact-btn"
+          >
+            <i class="fas fa-user"></i>
+          </a>
+
+          <div class="ban-timer">
+            封禁将在 <span id="banTimer">5:00</span> 分钟后自动解除
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ==================== 密码验证系统 ====================
+      const PASSWORD_CONFIG = {
+        correctPasswords: ["8848", "asdfghjkl"],
+        storageKey: "alist_access_verified",
+        expireHours: 24,
+        maxAttempts: 5,
+        attemptsKey: "alist_password_attempts",
+        permanentBanKey: "alist_permanent_ban",
+      }
+
+      let passwordAttempts =
+        parseInt(localStorage.getItem(PASSWORD_CONFIG.attemptsKey)) || 0
+      let musicPlayerInitialized = false
+      let adInitialized = false
+      let banTimerInterval = null
+
+      // 页面加载时检查
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("页面加载完成，初始化验证系统...")
+
+        const banData = localStorage.getItem(PASSWORD_CONFIG.permanentBanKey)
+        if (banData) {
+          try {
+            const ban = JSON.parse(banData)
+            const now = new Date().getTime()
+            const banTime = ban.timestamp
+
+            if (now - banTime < 5 * 60 * 1000) {
+              console.log("用户仍在封禁期内，显示封禁界面")
+              showPermanentBanScreen(banTime)
+              return
+            } else {
+              console.log("封禁期已过，清除封禁状态")
+              clearBanStatus()
+            }
+          } catch (e) {
+            console.log("封禁数据解析失败，清除封禁状态")
+            clearBanStatus()
+          }
+        }
+
+        const stored = localStorage.getItem(PASSWORD_CONFIG.storageKey)
+        let shouldShow = true
+
+        if (stored) {
+          try {
+            const data = JSON.parse(stored)
+            const now = new Date().getTime()
+            const expireTime =
+              data.timestamp + PASSWORD_CONFIG.expireHours * 60 * 60 * 1000
+
+            if (now < expireTime) {
+              shouldShow = false
+              console.log("密码验证已通过，跳过弹窗")
+              document.getElementById("passwordMask").style.display = "none"
+              initCustomContent()
+              setTimeout(() => initClickEffect(), 100)
+              setTimeout(() => initFloatingAd(), 500)
+              setTimeout(() => initMusicPlayer(), 800)
+            }
+          } catch (e) {
+            console.log("验证数据解析失败，清除存储")
+            localStorage.removeItem(PASSWORD_CONFIG.storageKey)
+          }
+        }
+
+        if (shouldShow) {
+          console.log("显示密码验证弹窗")
+          document.getElementById("passwordMask").style.display = "flex"
+          const passwordInput = document.getElementById("passwordInput")
+          setTimeout(() => {
+            passwordInput.focus()
+            passwordInput.disabled = false
+          }, 100)
+
+          if (
+            passwordAttempts > 0 &&
+            passwordAttempts < PASSWORD_CONFIG.maxAttempts
+          ) {
+            showError(
+              `剩余尝试次数: ${PASSWORD_CONFIG.maxAttempts - passwordAttempts}`,
+            )
+          }
+        }
+
+        const passwordInput = document.getElementById("passwordInput")
+        if (passwordInput) {
+          passwordInput.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+              console.log("回车键触发验证")
+              verifyPassword()
+            }
+          })
+        }
+      })
+
+      // ==================== 显示永久封禁界面 ====================
+      function showPermanentBanScreen(banStartTime) {
+        document.getElementById("passwordMask").style.display = "none"
+        const banMask = document.getElementById("permanentBanMask")
+        banMask.style.display = "block"
+
+        const now = new Date().getTime()
+        const banDuration = 5 * 60 * 1000
+        const timePassed = now - banStartTime
+        const timeLeft = Math.max(0, banDuration - timePassed)
+
+        startBanTimer(timeLeft)
+
+        setTimeout(() => {
+          clearBanStatus()
+          location.reload()
+        }, timeLeft)
+      }
+
+      // ==================== 启动封禁倒计时 ====================
+      function startBanTimer(timeLeft) {
+        if (banTimerInterval) {
+          clearInterval(banTimerInterval)
+        }
+
+        updateBanTimerDisplay(timeLeft)
+
+        banTimerInterval = setInterval(() => {
+          timeLeft -= 1000
+
+          if (timeLeft <= 0) {
+            clearInterval(banTimerInterval)
+            document.getElementById("banTimer").textContent = "0:00"
+          } else {
+            updateBanTimerDisplay(timeLeft)
+          }
+        }, 1000)
+      }
+
+      // ==================== 更新倒计时显示 ====================
+      function updateBanTimerDisplay(timeLeft) {
+        const minutes = Math.floor(timeLeft / 1000 / 60)
+        const seconds = Math.floor((timeLeft / 1000) % 60)
+        const timerDisplay = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`
+        document.getElementById("banTimer").textContent = timerDisplay
+      }
+
+      // ==================== 清除封禁状态 ====================
+      function clearBanStatus() {
+        localStorage.removeItem(PASSWORD_CONFIG.permanentBanKey)
+        localStorage.removeItem(PASSWORD_CONFIG.attemptsKey)
+        passwordAttempts = 0
+
+        if (banTimerInterval) {
+          clearInterval(banTimerInterval)
+          banTimerInterval = null
+        }
+      }
+
+      // ==================== 验证密码 ====================
+      function verifyPassword() {
+        console.log("开始验证密码...")
+
+        const passwordInput = document.getElementById("passwordInput")
+        const inputPassword = passwordInput.value.trim()
+        const errorMessage = document.getElementById("errorMessage")
+
+        if (passwordAttempts >= PASSWORD_CONFIG.maxAttempts) {
+          showError("尝试次数已达上限，您已被永久封禁！")
+
+          const banData = {
+            timestamp: new Date().getTime(),
+            attempts: passwordAttempts,
+          }
+          localStorage.setItem(
+            PASSWORD_CONFIG.permanentBanKey,
+            JSON.stringify(banData),
+          )
+
+          setTimeout(() => {
+            document.getElementById("passwordMask").style.display = "none"
+            showPermanentBanScreen(banData.timestamp)
+          }, 1000)
+
+          return
+        }
+
+        if (!inputPassword) {
+          showError("请输入访问密码")
+          shakeElement(passwordInput)
+          return
+        }
+
+        if (PASSWORD_CONFIG.correctPasswords.includes(inputPassword)) {
+          console.log("密码验证成功！")
+          passwordAttempts = 0
+          localStorage.removeItem(PASSWORD_CONFIG.attemptsKey)
+          localStorage.removeItem(PASSWORD_CONFIG.permanentBanKey)
+
+          const verifyData = {
+            verified: true,
+            timestamp: new Date().getTime(),
+          }
+
+          localStorage.setItem(
+            PASSWORD_CONFIG.storageKey,
+            JSON.stringify(verifyData),
+          )
+
+          const verifyBtn = document.getElementById("verifyBtn")
+          if (verifyBtn) {
+            verifyBtn.innerHTML = "✓ 验证成功"
+            verifyBtn.style.background = "rgba(255,255,255,0.9)"
+            verifyBtn.style.color = "#16a34a"
+          }
+
+          setTimeout(() => {
+            console.log("隐藏弹窗，初始化网站功能...")
+            document.getElementById("passwordMask").style.display = "none"
+            initCustomContent()
+            setTimeout(() => initClickEffect(), 100)
+            setTimeout(() => initFloatingAd(), 500)
+            setTimeout(() => initMusicPlayer(), 800)
+          }, 800)
+        } else {
+          console.log("密码验证失败")
+          passwordAttempts++
+          localStorage.setItem(
+            PASSWORD_CONFIG.attemptsKey,
+            passwordAttempts.toString(),
+          )
+
+          const remaining = PASSWORD_CONFIG.maxAttempts - passwordAttempts
+
+          if (remaining > 0) {
+            showError(`密码错误，剩余尝试次数: ${remaining}`)
+          } else {
+            showError("尝试次数已达上限，您已被永久封禁！")
+
+            const banData = {
+              timestamp: new Date().getTime(),
+              attempts: passwordAttempts,
+            }
+            localStorage.setItem(
+              PASSWORD_CONFIG.permanentBanKey,
+              JSON.stringify(banData),
+            )
+
+            setTimeout(() => {
+              document.getElementById("passwordMask").style.display = "none"
+              showPermanentBanScreen(banData.timestamp)
+            }, 1000)
+          }
+
+          passwordInput.value = ""
+          shakeElement(passwordInput)
+          setTimeout(() => passwordInput.focus(), 10)
+        }
+      }
+
+      // ==================== 点击烟花特效函数 ====================
+      function initClickEffect() {
+        console.log("初始化点击特效...")
+
+        // 移除现有的点击特效画布
+        const existingCanvas = document.getElementById("click-canvas")
+        if (existingCanvas) {
+          existingCanvas.remove()
+        }
+
+        const canvas = document.createElement("canvas")
+        canvas.style.position = "fixed"
+        canvas.style.top = "0"
+        canvas.style.left = "0"
+        canvas.style.width = "100%"
+        canvas.style.height = "100%"
+        canvas.style.pointerEvents = "none"
+        canvas.style.zIndex = "99999"
+        canvas.id = "click-canvas"
+        document.body.appendChild(canvas)
+
+        const ctx = canvas.getContext("2d")
+        let particles = []
+
+        class Particle {
+          constructor(x, y, color) {
+            this.x = x
+            this.y = y
+            this.size = Math.random() * 3 + 1
+            this.speedX = Math.random() * 6 - 3
+            this.speedY = Math.random() * 6 - 3
+            this.color = color
+            this.life = 30
+          }
+
+          update() {
+            this.x += this.speedX
+            this.y += this.speedY
+            this.life--
+            this.size *= 0.95
+          }
+
+          draw() {
+            ctx.fillStyle = this.color
+            ctx.globalAlpha = this.life / 30
+            ctx.beginPath()
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+            ctx.fill()
+          }
+        }
+
+        function resizeCanvas() {
+          canvas.width = window.innerWidth
+          canvas.height = window.innerHeight
+        }
+
+        resizeCanvas()
+        window.addEventListener("resize", resizeCanvas)
+
+        function createFireworks(x, y) {
+          const colors = [
+            "#ff0000",
+            "#00ff00",
+            "#0000ff",
+            "#ffff00",
+            "#ff00ff",
+            "#00ffff",
+          ]
+          const color = colors[Math.floor(Math.random() * colors.length)]
+
+          for (let i = 0; i < 50; i++) {
+            particles.push(new Particle(x, y, color))
+          }
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+          for (let i = 0; i < particles.length; i++) {
+            particles[i].update()
+            particles[i].draw()
+
+            if (particles[i].life <= 0) {
+              particles.splice(i, 1)
+              i--
+            }
+          }
+
+          requestAnimationFrame(animate)
+        }
+
+        animate()
+
+        document.addEventListener("click", function (e) {
+          createFireworks(e.clientX, e.clientY)
+        })
+      }
+
+      // ==================== 碰撞弹窗式浮动广告初始化函数 ====================
+      function initFloatingAd() {
+        if (adInitialized) return
+
+        if (localStorage.getItem("floating_ad_closed") === "true") {
+          console.log("广告已被关闭，不再显示")
+          return
+        }
+
+        console.log("初始化浮动广告...")
+
+        // 移除现有的广告容器
+        const existingAd = document.getElementById("custom-ad-container")
+        if (existingAd) {
+          existingAd.remove()
+        }
+
+        const adContainer = document.createElement("div")
+        adContainer.id = "custom-ad-container"
+
+        // 【修改】将整个广告内容包装在<a>标签内，添加跳转链接
+        adContainer.innerHTML = `
+    <a href="https://ymgjdsh.github.io/yinglaoqi/" target="_blank" style="text-decoration: none; color: inherit;">
+      <div id="custom-ad">
+        <div class="ad-image-container">
+          <img src="https://manyacg.top/setu" alt="广告图片">
+          <div class="ad-label">广告</div>
+          <div class="ad-close-btn" onclick="closeFloatingAd(event)">×</div>
+        </div>
+        <div class="ad-text">
+          <h4>欢迎访问我的博客</h4>
+          <p>点击访问樱花佬气个人博客</p>
+        </div>
+      </div>
+    </a>
+  `
+
+        document.body.appendChild(adContainer)
+
+        setTimeout(() => {
+          adContainer.style.display = "block"
+        }, 1000)
+
+        adInitialized = true
+      }
+
+      // 【修改】确保关闭按钮点击时阻止事件冒泡
+      function closeFloatingAd(event) {
+        event.preventDefault()
+        event.stopPropagation()
+
+        const adContainer = document.getElementById("custom-ad-container")
+        if (adContainer) {
+          adContainer.style.display = "none"
+          localStorage.setItem("floating_ad_closed", "true")
+        }
+      }
+
+      // ==================== 音乐播放器相关函数 ====================
+      function initMusicPlayer() {
+        if (musicPlayerInitialized) return
+
+        console.log("开始初始化音乐播放器...")
+
+        // 移除现有的音乐播放器
+        const existingPlayer = document.getElementById("music-player-container")
+        if (existingPlayer) {
+          existingPlayer.remove()
+        }
+
+        const existingMeting = document.getElementById("meting-js")
+        if (existingMeting) {
+          existingMeting.remove()
+        }
+
+        // 创建播放器容器
+        const playerContainer = document.createElement("div")
+        playerContainer.id = "music-player-container"
+        playerContainer.style.marginBottom = "20px"
+
+        // 找到插入位置
+        const customizeDiv = document.getElementById("customize")
+        if (customizeDiv && customizeDiv.firstChild) {
+          customizeDiv.insertBefore(playerContainer, customizeDiv.firstChild)
+        }
+
+        // 定义多个歌单
+        const playlists = [
+          { id: "8818612227", name: "经典老歌" },
+          { id: "3778678", name: "热门歌曲" },
+          { id: "17742189666", name: "轻音乐" },
+          { id: "5199618145", name: "电子音乐" },
+          { id: "5916528441", name: "流行歌曲" },
+        ]
+
+        // 随机选择一个歌单
+        const selectedPlaylist =
+          playlists[Math.floor(Math.random() * playlists.length)]
+
+        // 使用APlayer和MetingJS创建播放器
+        const loadMeting = () => {
+          if (window.Meting) {
+            createPlayer(selectedPlaylist)
+            return
+          }
+
+          const script = document.createElement("script")
+          script.src =
+            "https://cdn.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js"
+          script.onload = function () {
+            console.log("MetingJS 加载成功")
+            createPlayer(selectedPlaylist)
+          }
+
+          script.onerror = function () {
+            console.error("MetingJS 加载失败")
+            const container = document.getElementById("music-player-container")
+            if (container) {
+              container.innerHTML =
+                '<div style="text-align:center;color:#666;padding:20px;">音乐播放器加载失败</div>'
+            }
+          }
+
+          document.head.appendChild(script)
+        }
+
+        const createPlayer = (playlist) => {
+          playerContainer.innerHTML = `
+      <meting-js
+        fixed="true"
+        autoplay="true"
+        theme="#409EFF"
+        list-folded="true"
+        order="random"
+        preload="auto"
+        volume="0.6"
+        server="netease"
+        type="playlist"
+        id="${playlist.id}">
+      </meting-js>
+      <div style="text-align:center;margin-top:5px;color:#888;font-size:12px;">
+        正在播放: ${playlist.name} 歌单 (随机播放)
+      </div>
+    `
+
+          console.log("音乐播放器已创建，使用歌单ID:", playlist.id)
+          musicPlayerInitialized = true
+
+          // 【修复】延迟强制折叠歌单列表
+          setTimeout(() => {
+            forceFoldPlaylist()
+          }, 1500)
+
+          // 延迟自动播放
+          setTimeout(() => {
+            autoPlayMusic()
+          }, 1000)
+        }
+
+        loadMeting()
+      }
+
+      // 【新增】强制折叠歌单列表函数
+      function forceFoldPlaylist() {
+        console.log("尝试强制折叠歌单列表...")
+
+        // 方法1：通过APlayer实例
+        if (window.aplayers && window.aplayers.length > 0) {
+          const player = window.aplayers[0]
+          if (player && typeof player.setListFolded === "function") {
+            player.setListFolded(true)
+            console.log("通过APlayer实例强制折叠成功")
+          }
+        }
+
+        // 方法2：通过点击列表按钮
+        const listBtn = document.querySelector(".aplayer .aplayer-list-btn")
+        if (listBtn) {
+          // 先展开再折叠（确保状态切换）
+          const isFolded = listBtn.classList.contains("aplayer-list-mini")
+          if (!isFolded) {
+            listBtn.click()
+            console.log("通过点击列表按钮强制折叠成功")
+          }
+        }
+
+        // 方法3：直接修改DOM样式
+        const listElement = document.querySelector(".aplayer-list")
+        if (listElement) {
+          listElement.style.display = "none"
+          console.log("通过直接修改DOM样式折叠成功")
+
+          // 确保列表按钮显示正确状态
+          const listBtnIcon = document.querySelector(
+            ".aplayer-list-btn .aplayer-icon",
+          )
+          if (listBtnIcon) {
+            listBtnIcon.style.transform = "rotate(90deg)"
+          }
+        }
+
+        // 方法4：监听列表点击事件，确保可以正常切换
+        setTimeout(() => {
+          const listBtn = document.querySelector(".aplayer .aplayer-list-btn")
+          if (listBtn && !listBtn.hasAttribute("data-fixed-click")) {
+            listBtn.setAttribute("data-fixed-click", "true")
+            listBtn.addEventListener("click", function () {
+              setTimeout(() => {
+                // 确保列表按钮图标状态正确
+                const listBtnIcon = document.querySelector(
+                  ".aplayer-list-btn .aplayer-icon",
+                )
+                const listElement = document.querySelector(".aplayer-list")
+                if (listElement && listBtnIcon) {
+                  const isListVisible =
+                    listElement.style.display !== "none" &&
+                    listElement.offsetHeight > 0
+                  if (isListVisible) {
+                    listBtnIcon.style.transform = "rotate(90deg)"
+                  } else {
+                    listBtnIcon.style.transform = "rotate(0deg)"
+                  }
+                }
+              }, 10)
+            })
+          }
+        }, 100)
+      }
+
+      function autoPlayMusic() {
+        console.log("尝试自动播放音乐...")
+
+        let attempts = 0
+        const maxAttempts = 15
+
+        const tryPlay = setInterval(function () {
+          attempts++
+
+          // 方法1：通过APlayer实例
+          if (window.aplayers && window.aplayers.length > 0) {
+            const player = window.aplayers[0]
+            if (player && player.audio.paused) {
+              player.play()
+              console.log("音乐播放器：通过APlayer实例播放成功")
+              clearInterval(tryPlay)
+              return
+            }
+          }
+
+          // 方法2：点击播放按钮
+          const playButton = document.querySelector(".aplayer .aplayer-play")
+          if (playButton && playButton.title !== "暂停") {
+            playButton.click()
+            console.log("音乐播放器：通过点击按钮播放成功")
+            clearInterval(tryPlay)
+            return
+          }
+
+          // 达到最大尝试次数
+          if (attempts >= maxAttempts) {
+            console.warn("音乐播放器：自动播放失败，可能需要手动点击播放")
+            clearInterval(tryPlay)
+          }
+        }, 500)
+      }
+
+      // ==================== 通用工具函数 ====================
+      function resetPassword() {
+        const passwordInput = document.getElementById("passwordInput")
+        const errorMessage = document.getElementById("errorMessage")
+
+        passwordInput.value = ""
+        errorMessage.textContent = ""
+        errorMessage.classList.remove("show")
+
+        if (passwordInput) {
+          passwordInput.disabled = false
+          passwordInput.placeholder = "输入访问密码,没有密码？👇"
+        }
+
+        passwordInput.focus()
+      }
+
+      function showError(message) {
+        const errorMessage = document.getElementById("errorMessage")
+        if (errorMessage) {
+          errorMessage.textContent = message
+          errorMessage.classList.add("show")
+        }
+      }
+
+      function shakeElement(element) {
+        if (element) {
+          element.style.animation = "none"
+          setTimeout(() => {
+            element.style.animation = "shake 0.5s ease"
+            setTimeout(() => {
+              element.style.animation = ""
+            }, 500)
+          }, 10)
+        }
+      }
+
+      // ==================== Alist文件列表悬停特效逻辑 ====================
+      function initFileHoverEffects() {
+        console.log("初始化文件列表悬停特效...")
+
+        const observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (mutation.addedNodes.length > 0) {
+              setTimeout(attachHoverEffects, 100)
+            }
+          })
+        })
+
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        })
+
+        setTimeout(attachHoverEffects, 500)
+      }
+
+      function attachHoverEffects() {
+        const fileItems = document.querySelectorAll(
+          '.obj-box .item, .file-item, .list-item, [class*="item"]:not(.custom-theme-toggle):not(.tk-comment):not(.aplayer)',
+        )
+
+        console.log(`找到 ${fileItems.length} 个文件列表项`)
+
+        fileItems.forEach((item) => {
+          if (item.hasAttribute("data-hover-bound")) return
+
+          item.setAttribute("data-hover-bound", "true")
+
+          let hoverTimer = null
+          let hoverStartTime = 0
+          let isRgbActive = false
+
+          item.addEventListener("mouseenter", function (e) {
+            hoverStartTime = Date.now()
+            isRgbActive = false
+
+            item.classList.remove("rgb-effect")
+
+            hoverTimer = setInterval(function () {
+              const elapsed = Date.now() - hoverStartTime
+              const elapsedSeconds = elapsed / 1000
+
+              if (elapsedSeconds < 2) {
+                item.style.animation = "shakeBase 0.2s linear infinite"
+                item.classList.add("shaking")
+              } else if (elapsedSeconds < 4) {
+                item.style.animation = "shakeMedium 0.15s linear infinite"
+                item.classList.add("shaking")
+              } else if (elapsedSeconds < 5) {
+                item.style.animation = "shakeStrong 0.1s linear infinite"
+                item.classList.add("shaking")
+              } else {
+                clearInterval(hoverTimer)
+                hoverTimer = null
+
+                item.classList.remove("shaking")
+                item.classList.add("rgb-effect")
+                isRgbActive = true
+              }
+            }, 100)
+          })
+
+          item.addEventListener("mouseleave", function (e) {
+            if (hoverTimer) {
+              clearInterval(hoverTimer)
+              hoverTimer = null
+            }
+
+            item.classList.remove("shaking")
+            item.classList.remove("rgb-effect")
+
+            item.style.animation = ""
+            item.style.transform = ""
+            item.style.zIndex = ""
+            item.style.boxShadow = ""
+            item.style.filter = ""
+
+            isRgbActive = false
+            hoverStartTime = 0
+          })
+
+          item.addEventListener("click", function (e) {
+            if (hoverTimer) {
+              clearInterval(hoverTimer)
+              hoverTimer = null
+            }
+
+            item.classList.remove("shaking")
+            item.classList.remove("rgb-effect")
+
+            item.style.animation = ""
+            item.style.transform = ""
+            item.style.zIndex = ""
+            item.style.boxShadow = ""
+            item.style.filter = ""
+
+            isRgbActive = false
+            hoverStartTime = 0
+          })
+        })
+      }
+
+      // ==================== 初始化自定义内容 ====================
+      function initCustomContent() {
+        console.log("初始化自定义内容...")
+
+        const customizeDiv = document.getElementById("customize")
+        if (customizeDiv) {
+          customizeDiv.style.display = ""
+        }
+
+        if (typeof twikoo === "object") {
+          try {
+            twikoo.init({
+              envId: "https://shitcomment.vercel.app",
+              el: "#tcomment",
+              path: location.pathname,
+              lang: "zh-CN",
+            })
+            console.log("Twikoo评论系统初始化成功")
+          } catch (e) {
+            console.error("Twikoo初始化失败:", e)
+          }
+        }
+
+        initThemeToggleButton()
+        setTimeout(initFileHoverEffects, 500)
+        window.dispatchEvent(new Event("passwordVerified"))
+      }
+
+      // ==================== 自定义主题切换按钮 ====================
+      function initThemeToggleButton() {
+        // 移除现有的主题切换按钮
+        const existingToggle = document.querySelector(".custom-theme-toggle")
+        if (existingToggle) {
+          existingToggle.remove()
+        }
+
+        const themeToggleBtn = document.createElement("div")
+        themeToggleBtn.className = "custom-theme-toggle"
+        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>'
+        themeToggleBtn.title = "切换夜间/早晨模式"
+
+        document.body.appendChild(themeToggleBtn)
+
+        updateThemeIcon()
+
+        themeToggleBtn.addEventListener("click", function () {
+          toggleTheme()
+        })
+
+        const observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (mutation.attributeName === "class") {
+              updateThemeIcon()
+            }
+          })
+        })
+
+        observer.observe(document.body, { attributes: true })
+      }
+
+      function updateThemeIcon() {
+        const themeToggleBtn = document.querySelector(".custom-theme-toggle")
+        if (!themeToggleBtn) return
+
+        const isDarkMode = document.body.classList.contains("hope-ui-dark")
+        const icon = themeToggleBtn.querySelector("i")
+
+        if (isDarkMode) {
+          icon.className = "fas fa-sun"
+          themeToggleBtn.title = "切换到早晨模式"
+        } else {
+          icon.className = "fas fa-moon"
+          themeToggleBtn.title = "切换到夜间模式"
+        }
+      }
+
+      function toggleTheme() {
+        const body = document.body
+        const isDarkMode = body.classList.contains("hope-ui-dark")
+
+        if (isDarkMode) {
+          body.classList.remove("hope-ui-dark")
+          body.classList.add("hope-ui-light")
+          localStorage.setItem("hope-ui-theme", "light")
+        } else {
+          body.classList.remove("hope-ui-light")
+          body.classList.add("hope-ui-dark")
+          localStorage.setItem("hope-ui-theme", "dark")
+        }
+
+        updateThemeIcon()
+
+        if (window.dispatchEvent) {
+          window.dispatchEvent(new Event("hope-ui-theme-change"))
+        }
+      }
+
+      // 清除所有存储（调试用）
+      function clearPasswordStorage() {
+        localStorage.removeItem(PASSWORD_CONFIG.storageKey)
+        localStorage.removeItem(PASSWORD_CONFIG.attemptsKey)
+        localStorage.removeItem(PASSWORD_CONFIG.permanentBanKey)
+        localStorage.removeItem("floating_ad_closed")
+        location.reload()
+      }
+
+      // 手动解除封禁（调试用）
+      function forceRemoveBan() {
+        clearBanStatus()
+        alert("封禁已手动解除，页面将重新加载。")
+        location.reload()
+      }
+
+      // 调试函数
+      window.debugSite = function () {
+        console.log("=== 网站调试信息 ===")
+        console.log(
+          "密码验证状态:",
+          localStorage.getItem(PASSWORD_CONFIG.storageKey),
+        )
+        console.log(
+          "尝试次数:",
+          localStorage.getItem(PASSWORD_CONFIG.attemptsKey),
+        )
+        console.log(
+          "永久封禁状态:",
+          localStorage.getItem(PASSWORD_CONFIG.permanentBanKey),
+        )
+        console.log("广告关闭状态:", localStorage.getItem("floating_ad_closed"))
+        console.log("广告容器:", document.getElementById("custom-ad-container"))
+        console.log("音乐播放器状态:", musicPlayerInitialized)
+        console.log("MetingJS 状态:", typeof window.Meting)
+        console.log("APlayer 状态:", typeof APlayer)
+
+        const banData = localStorage.getItem(PASSWORD_CONFIG.permanentBanKey)
+        if (banData) {
+          try {
+            const ban = JSON.parse(banData)
+            const now = new Date().getTime()
+            const banTime = ban.timestamp
+            const timePassed = now - banTime
+            const remaining = Math.max(0, 5 * 60 * 1000 - timePassed)
+            console.log(`封禁已过去: ${Math.floor(timePassed / 1000)}秒`)
+            console.log(
+              `封禁剩余时间: ${Math.floor(remaining / 1000)}秒 (${Math.ceil(remaining / 1000 / 60)}分钟)`,
+            )
+          } catch (e) {
+            console.error("封禁时间解析失败")
+          }
+        }
+
+        console.log("====================")
+      }
+
+      window.forceRemoveBan = forceRemoveBan
+    </script>
+
+    <!--延迟加载-->
+    <div id="customize" style="display: none">
+      <div>
+        <!-- ==================== 嵌入式公告栏 ==================== -->
+        <div id="custom-announcement-card">
+          <div class="announcement-header">
+            <i class="fas fa-bullhorn" style="color: #409eff"></i>
+            <span>📢 重要公告与说明</span>
+          </div>
+          <div class="announcement-body">
+            <h4>🎯 最新动态</h4>
+            <p>
+              欢迎使用 <strong>雑鱼's Cloud</strong> 网盘！本站由
+              <strong>Openlist</strong> 强力驱动。
+            </p>
+
+            <h4>📸 仙贝的家</h4>
+            <p>这是一个<strong>梦</strong>：</p>
+            <a href="https://www.114514.com" target="_blank">
+              <img
+                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&h=400&fit=crop"
+                alt="技术示例"
+                title="点击访问示例网站"
+              />
+            </a>
+            <p><em>（图片支持点击跳转，已确保可靠加载）</em></p>
+
+            <h4>🔗 常用链接</h4>
+            <ul>
+              <li>
+                项目主页：<a
+                  href="https://github.com/alist-org/alist"
+                  target="_blank"
+                  >Alist on GitHub</a
+                >
+              </li>
+              <li>
+                Alist文档：<a href="https://alist.nn.ci" target="_blank"
+                  >Alist 官方文档</a
+                >
+              </li>
+              <li>
+                问题反馈：<a
+                  href="https://github.com/alist-org/alist/issues"
+                  target="_blank"
+                  >提交Issue</a
+                >
+              </li>
+            </ul>
+
+            <h4>💡 使用须知</h4>
+            <ol>
+              <li>
+                请遵守相关法律法规，勿下载<strong>非法、侵权</strong>内容,下载后<em>必须24小时内删除！！</em>。
+              </li>
+              <li>
+                单文件下载大小建议不超过 <strong>10GB</strong>，确保传输稳定。
+              </li>
+              <li>如需帮助或合作，请通过页面底部联系方式留言。</li>
+            </ol>
+
+            <p>公告栏内容仅供参考！</p>
+          </div>
+        </div>
+
+        <!-- 隐藏测试方块 -->
+        <div class="special-content" style="display: none">
+          <div class="shaking-element">
+            悬停我
+            <div class="hover-timer">0s</div>
+          </div>
+        </div>
+
+        <!-- Twikoo 评论模块 -->
+        <center>
+          <div id="tcomment" class="newValine"></div>
+        </center>
+
+        <br />
+        <center class="dibu">
+          <div style="line-height: 20px; font-size: 9pt; font-weight: bold">
+            <span>
+              "
+              <span
+                style="color: rgb(13, 109, 252); font-weight: bold"
+                id="hitokoto"
+              >
+                <a href="#" id="hitokoto_text">
+                  "人生最大的遗憾,就是在最无能为力的时候遇到一个想要保护一生的人."
+                </a>
+              </span>
+              "
+            </span>
+            <p style="margin-left: 10rem; font-size: 8pt">
+              <small> —— Anwen's Cloud </small>
+            </p>
+          </div>
+
+          <div style="font-size: 13px; font-weight: bold">
+            <span class="nav-item">
+              <a class="nav-link" href="114514" target="_blank">
+                <i class="fab fa-qq" style="color: #409eff" aria-hidden="true">
+                </i>
+                QQ |
+              </a>
+            </span>
+            <span class="nav-item">
+              <a class="nav-link" href="114514@qq.com" target="_blank">
+                <i
+                  class="fa-duotone fa-envelope-open"
+                  style="color: #409eff"
+                  aria-hidden="true"
+                >
+                </i>
+                邮箱 |
+              </a>
+            </span>
+            <span class="nav-item">
+              <a
+                class="nav-link"
+                href="https://ymgjdsh.github.io/yinglaoqi/"
+                target="_blank"
+              >
+                <i
+                  class="fas fa-edit"
+                  style="color: #409eff"
+                  aria-hidden="true"
+                >
+                </i>
+                博客 |
+              </a>
+            </span>
+            <span class="nav-item">
+              <a class="nav-link" href="xxxxxxxx" target="_blank">
+                <i
+                  class="fas fa-comment-lines"
+                  style="color: #409eff"
+                  aria-hidden="true"
+                >
+                </i>
+                留言 |
+              </a>
+            </span>
+            <span class="nav-item">
+              <a class="nav-link" href="xxxxxxx" target="_blank">
+                <i
+                  class="fa fa-cloud-download"
+                  style="color: #409eff"
+                  aria-hidden="true"
+                >
+                </i>
+                云盘 |
+              </a>
+            </span>
+            <!--后台入口-->
+            <span class="nav-item">
+              <a class="nav-link" href="/@manage" target="_blank">
+                <i
+                  class="fa-solid fa-folder-gear"
+                  style="color: #409eff"
+                  aria-hidden="true"
+                >
+                </i>
+                管理 |
+              </a>
+            </span>
+            <!--版权，请尊重作者-->
+            <span class="nav-item">
+              <a
+                class="nav-link"
+                href="https://github.com/OpenListTeam/OpenList"
+                target="_blank"
+              >
+                <i
+                  class="fa-solid fa-copyright"
+                  style="color: #409eff"
+                  aria-hidden="true"
+                >
+                </i>
+                Alist
+              </a>
+            </span>
+            <br />
+            <!--添加一个访问量-->
+            <span>
+              本"<span style="color: rgb(13, 109, 252); font-weight: bold"
+                ><a href="#">目录</a></span
+              >"访问量
+              <span
+                id="busuanzi_page_pv"
+                style="color: rgb(13, 109, 252); font-weight: bold"
+              ></span>
+              次 本站总访问量
+              <span
+                id="busuanzi_site_pv"
+                style="color: rgb(13, 109, 252); font-weight: bold"
+              ></span>
+              次 本站总访客数
+              <span
+                id="busuanzi_site_uv"
+                style="color: rgb(13, 109, 252); font-weight: bold"
+              ></span>
+              人
+            </span>
+            <br />
+            <!--添加备案信息-->
+            <span class="nav-item">
+              <a
+                class="nav-link"
+                href="https://beian.miit.gov.cn/#/Integrated/index"
+                target="_blank"
+              >
+                <i
+                  class="fa-solid fa-shield-check"
+                  style="color: #409eff"
+                  aria-hidden="true"
+                >
+                </i>
+                冀 ICP备2222000777号
+              </a>
+            </span>
+          </div>
+        </center>
+        <br />
+        <br />
+      </div>
+
+      <!--一言API-->
+      <script
+        src="https://v1.hitokoto.cn/?encode=js&select=%23hitokoto"
+        defer
+      ></script>
+    </div>
   </body>
 </html>
