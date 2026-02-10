@@ -4,9 +4,9 @@ export async function onRequest(context) {
   // 只处理API请求
   if (url.pathname.startsWith("/api/")) {
     // 替换为专用API域名
-    url.hostname = "api-alist.ymg.qzz.io"
+    url.hostname = "dpan.ymg.qzz.io"
     url.protocol = "https:"
-    url.port = ""
+    url.port = "5488"
 
     // 尝试从缓存中获取
     const cache = caches.default
